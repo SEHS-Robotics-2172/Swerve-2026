@@ -34,10 +34,12 @@ public class Robot extends TimedRobot {
     //hand = m_robotContainer.hand;
     swerve = m_robotContainer.s_Swerve;
 
-    //if (robot.existing == true) {
+    /*
+    if (robot.existing == true) {
     //  robot.fix();
     //  robot.work();
-    //}
+    }
+    */
 
   }
 
@@ -67,12 +69,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // schedule the autonomous command (example)
-    if (m_autonomousCommand != null) {
-      m_autonomousCommand.schedule();
-    }
+    // // schedule the autonomous command (example)
+    // if (m_autonomousCommand != null) {
+    //   CommandScheduler.getInstance().schedule(m_autonomousCommand);
+    // }
   }
 
   /** This function is called periodically during autonomous. */
@@ -94,8 +96,10 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
+    /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
     LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
+    */
+    
   }
 
   @Override

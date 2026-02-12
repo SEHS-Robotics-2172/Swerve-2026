@@ -29,28 +29,37 @@ public class RobotContainer {
     /* Driver Buttons */
     private final Trigger zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final Trigger robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    
-    /* Co-Driver Buttons */
+    private final Trigger intakeTrigger = new JoystickButton(driver, XboxController.Button.kX.value); //Merrick
 
+    /* Co-Driver Buttons */
    
 
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
+    public final Intake i_Intake = new Intake(); //Merrick
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
         s_Swerve.setDefaultCommand(
-            new TeleopSwerve(
-                s_Swerve, 
-                () -> -driver.getRawAxis(translationAxis), 
-                () -> -driver.getRawAxis(strafeAxis), 
-                () -> -driver.getRawAxis(rotationAxis), 
-                () -> robotCentric.getAsBoolean()
-            )
-        );
+             new TeleopSwerve(
+                 s_Swerve, 
+                 () -> -driver.getRawAxis(translationAxis), 
+                 () -> -driver.getRawAxis(strafeAxis), 
+                 () -> -driver.getRawAxis(rotationAxis), 
+                 () -> robotCentric.getAsBoolean()
+             )
+         );
 
-        // Configure the button bindings
+        i_Intake.setDefaultCommand(
+            new IntakeCommand(
+                i_Intake,
+                () -> intakeTrigger.getAsBoolean()
+            )
+        );//Merrick
+
+
+        //Configure the button bindings
         configureButtonBindings();
     }
 
@@ -63,7 +72,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-
+        intakeTrigger.onTrue(new InstantCommand(() -> i_Intake.setSpeed(1.0, 1.0))); //Merrick
     }
 
     /**
@@ -71,8 +80,8 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    public Command getAutonomousCommand() {
+    //public Command getAutonomousCommand() {
         // An ExampleCommand will run in autonomous
-        return new exampleAuto(s_Swerve);
-    }
+        // return new exampleAuto(s_Swerve);
+    //}
 }
