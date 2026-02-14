@@ -35,28 +35,21 @@ public class RobotContainer {
    
 
     /* Subsystems */
-    public final Swerve s_Swerve = new Swerve();
+    // public final Swerve s_Swerve = new Swerve();
     public final Intake i_Intake = new Intake(); //Merrick
 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        s_Swerve.setDefaultCommand(
-             new TeleopSwerve(
-                 s_Swerve, 
-                 () -> -driver.getRawAxis(translationAxis), 
-                 () -> -driver.getRawAxis(strafeAxis), 
-                 () -> -driver.getRawAxis(rotationAxis), 
-                 () -> robotCentric.getAsBoolean()
-             )
-         );
-
-        i_Intake.setDefaultCommand(
-            new IntakeCommand(
-                i_Intake,
-                () -> intakeTrigger.getAsBoolean()
-            )
-        );//Merrick
+        // s_Swerve.setDefaultCommand(
+        //      new TeleopSwerve(
+        //          s_Swerve, 
+        //          () -> -driver.getRawAxis(translationAxis), 
+        //          () -> -driver.getRawAxis(strafeAxis), 
+        //          () -> -driver.getRawAxis(rotationAxis), 
+        //          () -> robotCentric.getAsBoolean()
+        //      )
+        //  );
 
 
         //Configure the button bindings
@@ -71,8 +64,8 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        intakeTrigger.onTrue(new InstantCommand(() -> i_Intake.setSpeed(1.0, 1.0))); //Merrick
+        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        intakeTrigger.whileTrue(new IntakeCommand(i_Intake, intakeTrigger)); //Merrick
     }
 
     /**
