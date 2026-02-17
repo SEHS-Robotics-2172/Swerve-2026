@@ -35,7 +35,6 @@ public class IntakeCommand extends Command{
   public void end(boolean interrupted) {
     i_Intake.setSpeed(0);
     //Ruban transparent
-    //osama bin jeff
   }
 
 }
