@@ -152,3 +152,4 @@ public final class Constants {
         public static final int GoodRevProduct = 52; //Rev
     }
 }
+

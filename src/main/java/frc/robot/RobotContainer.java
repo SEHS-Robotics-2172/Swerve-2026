@@ -29,7 +29,7 @@ public class RobotContainer {
     /* Driver Buttons */
     private final Trigger zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final Trigger robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
-    private final Trigger intakeTrigger = new JoystickButton(driver, XboxController.Button.kX.value); //Merrick
+
 
     /* Co-Driver Buttons */
    
@@ -37,7 +37,7 @@ public class RobotContainer {
     /* Subsystems */
     // public final Swerve s_Swerve = new Swerve();
     public final Intake i_Intake = new Intake(); //Merrick
-
+ 
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -50,7 +50,7 @@ public class RobotContainer {
         //          () -> robotCentric.getAsBoolean()
         //      )
         //  );
-
+        i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, driver::getRightTriggerAxis));
 
         //Configure the button bindings
         configureButtonBindings();
@@ -65,7 +65,7 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        intakeTrigger.whileTrue(new IntakeCommand(i_Intake, intakeTrigger)); //Merrick
+        
     }
 
     /**
