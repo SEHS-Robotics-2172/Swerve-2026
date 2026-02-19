@@ -2,14 +2,16 @@ package frc.robot.commands;
 //Merrick (All)
 import frc.robot.subsystems.Intake;
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
+
 import edu.wpi.first.wpilibj2.command.Command;
 
 public class IntakeCommand extends Command{
     private Intake i_Intake;
 
-    private BooleanSupplier IntakeButton;
+    private DoubleSupplier IntakeButton;
     
-    public IntakeCommand(Intake i_Intake, BooleanSupplier IntakeButton) {
+    public IntakeCommand(Intake i_Intake, DoubleSupplier IntakeButton) {
         this.i_Intake = i_Intake;
         addRequirements(i_Intake); //Causes the robot to ****ing explode (not actually)(actually)
 
@@ -22,12 +24,7 @@ public class IntakeCommand extends Command{
         /* Get Values?, Deadband?*/
 
         /* Used */
-        if (IntakeButton.getAsBoolean()) {
-            i_Intake.setSpeed(0.5);
-        }
-        else {
-            i_Intake.setSpeed(0.0);
-        }
+        i_Intake.setSpeed(IntakeButton.getAsDouble());
 
     }
 
