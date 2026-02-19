@@ -149,7 +149,7 @@ public final class Constants {
     public static final class IntakeConstants {
         public static final int topIntake = 50;
         public static final int bottomIntake = 51;
-        public static final int GoodRevProduct = 52; //Rev
+        public static final int funnelIntake = 52; // NOT REV 🥳
     }
 }
 
