@@ -151,5 +151,13 @@ public final class Constants {
         public static final int bottomIntake = 51;
         public static final int funnelIntake = 53; // NOT REV 🥳
     }
+
+    public static final class ShooterConstants {
+        //ruban transparent
+        public static final int flyWheel = 0;
+        public static final int turret = 0;
+        public static final int hood = 0;
+        public static final int turretEncoder = 0;
+    }
 }
 
