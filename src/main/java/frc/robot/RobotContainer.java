@@ -37,6 +37,7 @@ public class RobotContainer {
     /* Subsystems */
     // public final Swerve s_Swerve = new Swerve();
     public final Intake i_Intake = new Intake(); //Merrick
+    public final Shooter shooter = new Shooter();
  
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
@@ -51,6 +52,7 @@ public class RobotContainer {
         //      )
         //  );
         i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, driver::getRightTriggerAxis));
+        shooter.setDefaultCommand(new DefaultShooter(shooter, () -> driver.getPOV() == 0, () -> driver.getPOV() == 180));
 
         //Configure the button bindings
         configureButtonBindings();
