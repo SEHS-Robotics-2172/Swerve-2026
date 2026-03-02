@@ -52,7 +52,7 @@ public class Intake extends SubsystemBase {
   public void setSpeed(double intakeSpeed) {//changing name of revspeed later - Merrick
     topIntake.set(intakeSpeed);
     bottomIntake.set(intakeSpeed);
-    funnelIntake.set(intakeSpeed * 5);
+    funnelIntake.set(intakeSpeed);
   }
 
   @Override

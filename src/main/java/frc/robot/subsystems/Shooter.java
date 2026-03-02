@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase {
     turretConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     hoodConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
 
-    flyWheelConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    flyWheelConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     turretConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     hoodConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
@@ -62,7 +62,7 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     hoodPID.setSetpoint(wantedAngle.getRotations());
     hood.set(hoodPID.calculate(rubanEncoder.getAbsolutePosition().getValueAsDouble()));
-    flyWheel.setVoltage(6);
+    flyWheel.setVoltage(3);
   }
 
   public void setWantedAngle(Rotation2d angle){

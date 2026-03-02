@@ -153,8 +153,8 @@ public final class Constants {
     }
 
     public static final class ShooterConstants {
-        //ruban transparent
-        public static final int flyWheel = 0;
+        //ruban transparent 🦐
+        public static final int flyWheel = 55;
         public static final int turret = 0;
         public static final int hood = 0;
         public static final int turretEncoder = 0;
