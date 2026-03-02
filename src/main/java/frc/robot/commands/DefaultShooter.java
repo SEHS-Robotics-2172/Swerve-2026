@@ -6,8 +6,10 @@ package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
 
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.subsystems.Shooter;
 
@@ -17,6 +19,8 @@ public class DefaultShooter extends Command {
   Shooter shooter;
   BooleanSupplier up;
   BooleanSupplier down;
+  Rotation2d wantedHoodAngle = Rotation2d.kZero;
+  Pose3d tagPosition;
   public DefaultShooter(Shooter shooter_, BooleanSupplier up_, BooleanSupplier down_) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooter_;
@@ -29,12 +33,15 @@ public class DefaultShooter extends Command {
   public void execute() {
 
     // Temporary Code for manual control
+    tagPosition = LimelightHelpers.getTargetPose3d_CameraSpace("limelight");
+
+    
 
     if (up.getAsBoolean()){
-      shooter.setWantedAngle(shooter.getWantedAngle().plus(Rotation2d.fromRotations(0.1 * Robot.kDefaultPeriod)));
+      shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(0.1 * Robot.kDefaultPeriod)));
     }
     if(down.getAsBoolean()){
-      shooter.setWantedAngle(shooter.getWantedAngle().minus(Rotation2d.fromRotations(0.1 * Robot.kDefaultPeriod)));
+      shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().minus(Rotation2d.fromRotations(0.1 * Robot.kDefaultPeriod)));
     }
   }
 }

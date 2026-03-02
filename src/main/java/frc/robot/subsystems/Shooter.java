@@ -27,15 +27,20 @@ public class Shooter extends SubsystemBase {
   private TalonFXConfiguration turretConfiguration;
   private TalonFXConfiguration hoodConfiguration;
   private CANcoderConfiguration rubanEncoderConfig;
-  private Rotation2d wantedAngle = Rotation2d.kZero;
+  private double flywheelSpeed;
+  private Rotation2d wantedHoodAngle = Rotation2d.kZero;
+  private Rotation2d wantedTurretAngle = Rotation2d.kZero;
 
   private PIDController hoodPID;
+  private PIDController turretPID;
   public Shooter() {
     flyWheel = new TalonFX(ShooterConstants.flyWheel);
     turret = new TalonFX(ShooterConstants.turret);
     hood = new TalonFX(ShooterConstants.hood);
     rubanEncoder = new CANcoder(ShooterConstants.turretEncoder);
     hoodPID = new PIDController(0.1, 0, 0);
+    turretPID = new PIDController(0.1, 0, 0);
+
 
     //ruban transparent
 
@@ -60,15 +65,23 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
-    hoodPID.setSetpoint(wantedAngle.getRotations());
-    hood.set(hoodPID.calculate(rubanEncoder.getAbsolutePosition().getValueAsDouble()));
-    flyWheel.setVoltage(3);
+    hoodPID.setSetpoint(wantedHoodAngle.getRotations());
+    hood.set(hoodPID.calculate(hood.getPosition().getValueAsDouble()));
+
+    // turretPID.setSetpoint(wantedTurretAngle.getRotations());
+    // turret.set(turretPID.calculate(rubanEncoder.getPosition().getValueAsDouble()));
+
+    flyWheel.setVoltage(flywheelSpeed);
   }
 
-  public void setWantedAngle(Rotation2d angle){
-    wantedAngle = angle;
+  public void setWantedHoodAngle(Rotation2d angle){
+    wantedHoodAngle = angle;
   }
-  public Rotation2d getWantedAngle(){
-    return wantedAngle;
+  public Rotation2d getWantedHoodAngle(){
+    return wantedHoodAngle;
+  }
+
+  public void setTurretSpeed(double speed){
+    turret.set(speed);
   }
 }

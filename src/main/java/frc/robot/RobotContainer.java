@@ -30,6 +30,10 @@ public class RobotContainer {
     private final Trigger zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final Trigger robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
+    private final Trigger turretLeft = new Trigger(() -> driver.getPOV() == 90);
+    private final Trigger turretRight = new Trigger(() -> driver.getPOV() == 270);
+
+    
 
     /* Co-Driver Buttons */
    
@@ -67,7 +71,11 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        
+        turretLeft.onTrue(new InstantCommand(() -> shooter.setTurretSpeed(0.1)));
+        turretLeft.onFalse(new InstantCommand(() -> shooter.setTurretSpeed(0)));
+
+        turretRight.onTrue(new InstantCommand(() -> shooter.setTurretSpeed(-0.1)));
+        turretRight.onFalse(new InstantCommand(() -> shooter.setTurretSpeed(0)));
     }
 
     /**
