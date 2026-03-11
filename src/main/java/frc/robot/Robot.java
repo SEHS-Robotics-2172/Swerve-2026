@@ -4,11 +4,14 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.Orchestra;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.Intake;
+import frc.robot.subsystems.Shooter;
 import frc.robot.subsystems.Swerve;
 
 /**
@@ -25,7 +28,11 @@ public class Robot extends TimedRobot {
   
   private Swerve swerve;
   private Intake intake;
+  private Shooter shooter;
   private XboxController driver;
+
+  Orchestra music = new Orchestra();
+
   /**
    * This function is run when the robot is first started up and should be used for any
    * initialization code.
@@ -37,6 +44,7 @@ public class Robot extends TimedRobot {
     m_robotContainer = new RobotContainer();
     intake = m_robotContainer.i_Intake;
     driver = m_robotContainer.driver;
+    shooter = m_robotContainer.shooter;
     //hand = m_robotContainer.hand;
     //swerve = m_robotContainer.s_Swerve;
 
@@ -97,6 +105,9 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    music.loadMusic("output.chrp");
+
+    music.play();
   }
 
   /** This function is called periodically during operator control. */
@@ -105,7 +116,6 @@ public class Robot extends TimedRobot {
     /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
     LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
     */
-    
   }
 
   @Override

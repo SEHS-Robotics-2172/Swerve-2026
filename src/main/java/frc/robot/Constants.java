@@ -93,7 +93,7 @@ public final class Constants {
             public static final int driveMotorID = 4;
             public static final int angleMotorID = 3;
             public static final int canCoderID = 22;
-            public static final Rotation2d angleOffset = Rotation2d.fromRotations(0.378174);
+            public static final Rotation2d angleOffset = Rotation2d.fromRotations(0.378174-0.25-0.25+0.5);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -103,7 +103,7 @@ public final class Constants {
             public static final int driveMotorID = 6;
             public static final int angleMotorID = 5;
             public static final int canCoderID = 23;
-            public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.485840);
+            public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.027+0.25-0.25+0.5);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -113,17 +113,17 @@ public final class Constants {
             public static final int driveMotorID = 8;
             public static final int angleMotorID = 7;
             public static final int canCoderID = 24;
-            public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.06);
+            public static final Rotation2d angleOffset = Rotation2d.fromRotations(-0.06+0.14-0.25);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
 
         /* Back Right Module - Module 3 */
         public static final class Mod3 { //TODO: This must be tuned to specific robot
-            public static final int driveMotorID = 2;
-            public static final int angleMotorID = 1;
+            public static final int driveMotorID = 1;
+            public static final int angleMotorID = 2;
             public static final int canCoderID = 21;
-            public static final Rotation2d angleOffset = Rotation2d.fromRotations(0.601807);
+            public static final Rotation2d angleOffset = Rotation2d.fromRotations(0.601807-0.16+0.5-0.25);
             public static final SwerveModuleConstants constants = 
                 new SwerveModuleConstants(driveMotorID, angleMotorID, canCoderID, angleOffset);
         }
@@ -154,10 +154,15 @@ public final class Constants {
 
     public static final class ShooterConstants {
         //ruban transparent 🦐
-        public static final int flyWheel = 55;
-        public static final int turret = 0;
-        public static final int hood = 0;
-        public static final int turretEncoder = 0;
+        public static final int flyWheel = 42;
+        public static final int turret = 52;
+        public static final int hood = 62;
+        public static final int turretEncoder = 28;
+        public static final int hoodEncoder = 29;
+
+        public static final Rotation2d hoodEncoderOffset = Rotation2d.fromRotations(-0.04+0.2485);
+        public static final Rotation2d turretEncoderOffset = Rotation2d.fromRotations(0.93);
+        
     }
 }
 

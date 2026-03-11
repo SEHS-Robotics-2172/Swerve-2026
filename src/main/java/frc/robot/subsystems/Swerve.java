@@ -30,7 +30,7 @@ public class Swerve extends SubsystemBase {
             new SwerveModule(0, Constants.Swerve.Mod0.constants),
             new SwerveModule(1, Constants.Swerve.Mod1.constants),
             new SwerveModule(2, Constants.Swerve.Mod2.constants),
-            new SwerveModule(3, Constants.Swerve.Mod3.constants)
+            new SwerveModule(3, Constants.Swerve.Mod3.constants),
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
@@ -43,7 +43,7 @@ public class Swerve extends SubsystemBase {
                                     translation.getX(), 
                                     translation.getY(), 
                                     rotation, 
-                                    getHeading().plus(Rotation2d.fromDegrees(-90))
+                                    getHeading()
                                 )
                                 : new ChassisSpeeds(
                                     -translation.getY(), 

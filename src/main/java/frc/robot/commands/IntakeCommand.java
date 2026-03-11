@@ -10,12 +10,14 @@ public class IntakeCommand extends Command{
     private Intake i_Intake;
 
     private DoubleSupplier IntakeButton;
+    BooleanSupplier IntakeMode;
     
-    public IntakeCommand(Intake i_Intake, DoubleSupplier IntakeButton) {
+    public IntakeCommand(Intake i_Intake, DoubleSupplier IntakeButton, BooleanSupplier IntakeMode) {
         this.i_Intake = i_Intake;
         addRequirements(i_Intake); //Causes the robot to ****ing explode (not actually)(actually)
 
         this.IntakeButton = IntakeButton;
+        this.IntakeMode = IntakeMode;
     }
 
     @Override
@@ -24,13 +26,13 @@ public class IntakeCommand extends Command{
         /* Get Values?, Deadband?*/
 
         /* Used */
-        i_Intake.setSpeed(IntakeButton.getAsDouble());
+        i_Intake.setSpeed(IntakeButton.getAsDouble(), IntakeMode.getAsBoolean());
 
     }
 
   @Override
   public void end(boolean interrupted) {
-    i_Intake.setSpeed(0);
+    i_Intake.setSpeed(0, IntakeMode.getAsBoolean());
     //Ruban transparent
   }
 

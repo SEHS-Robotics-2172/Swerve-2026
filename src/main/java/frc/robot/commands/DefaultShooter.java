@@ -5,6 +5,7 @@
 package frc.robot.commands;
 
 import java.util.function.BooleanSupplier;
+import java.util.function.DoubleSupplier;
 
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -21,11 +22,13 @@ public class DefaultShooter extends Command {
   BooleanSupplier down;
   Rotation2d wantedHoodAngle = Rotation2d.kZero;
   Pose3d tagPosition;
-  public DefaultShooter(Shooter shooter_, BooleanSupplier up_, BooleanSupplier down_) {
+  DoubleSupplier speed;
+  public DefaultShooter(Shooter shooter_, BooleanSupplier up_, BooleanSupplier down_, DoubleSupplier speed_) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooter_;
     up = up_;
     down = down_;
+    speed = speed_;
     addRequirements(shooter);
   }
   // Called every time the scheduler runs while the command is scheduled.
@@ -34,7 +37,7 @@ public class DefaultShooter extends Command {
 
     // Temporary Code for manual control
     tagPosition = LimelightHelpers.getTargetPose3d_CameraSpace("limelight");
-
+    // shooter.setFlyWheelSpeed(speed.getAsDouble() * 12);
     
 
     if (up.getAsBoolean()){
@@ -43,5 +46,6 @@ public class DefaultShooter extends Command {
     if(down.getAsBoolean()){
       shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().minus(Rotation2d.fromRotations(0.1 * Robot.kDefaultPeriod)));
     }
+    
   }
 }

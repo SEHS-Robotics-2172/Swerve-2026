@@ -1,7 +1,9 @@
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.JoystickButton;
@@ -30,8 +32,12 @@ public class RobotContainer {
     private final Trigger zeroGyro = new JoystickButton(driver, XboxController.Button.kY.value);
     private final Trigger robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
-    private final Trigger turretLeft = new Trigger(() -> driver.getPOV() == 90);
-    private final Trigger turretRight = new Trigger(() -> driver.getPOV() == 270);
+    private final Trigger turretLeft = new Trigger(driver::getRightBumperButton);
+    private final Trigger turretRight = new Trigger(driver::getLeftBumperButton);
+
+    private final Trigger hoodUp = new Trigger(driver::getRightStickButton); 
+    private final Trigger hoodDown = new Trigger(driver::getLeftStickButton); 
+    private final Trigger intakeMode = new Trigger(()->driver.getRawButton(XboxController.Button.kStart.value));
 
     
 
@@ -39,24 +45,24 @@ public class RobotContainer {
    
 
     /* Subsystems */
-    // public final Swerve s_Swerve = new Swerve();
+    public final Swerve s_Swerve = new Swerve();
     public final Intake i_Intake = new Intake(); //Merrick
     public final Shooter shooter = new Shooter();
  
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        // s_Swerve.setDefaultCommand(
-        //      new TeleopSwerve(
-        //          s_Swerve, 
-        //          () -> -driver.getRawAxis(translationAxis), 
-        //          () -> -driver.getRawAxis(strafeAxis), 
-        //          () -> -driver.getRawAxis(rotationAxis), 
-        //          () -> robotCentric.getAsBoolean()
-        //      )
-        //  );
-        i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, driver::getRightTriggerAxis));
-        shooter.setDefaultCommand(new DefaultShooter(shooter, () -> driver.getPOV() == 0, () -> driver.getPOV() == 180));
+        s_Swerve.setDefaultCommand(
+              new TeleopSwerve(
+                  s_Swerve, 
+                  () -> -driver.getRawAxis(translationAxis), 
+                  () -> -driver.getRawAxis(strafeAxis), 
+                  () -> -driver.getRawAxis(rotationAxis), 
+                  () -> robotCentric.getAsBoolean()
+              )
+          );
+        i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, () -> driver.getRightTriggerAxis(), intakeMode)); // -driver.getLeftTriggerAxis()
+        shooter.setDefaultCommand(new DefaultShooter(shooter, () -> driver.getPOV() == 0, () -> driver.getPOV() == 180, driver::getLeftTriggerAxis));
 
         //Configure the button bindings
         configureButtonBindings();
@@ -70,12 +76,14 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        // zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        turretLeft.onTrue(new InstantCommand(() -> shooter.setTurretSpeed(0.1)));
-        turretLeft.onFalse(new InstantCommand(() -> shooter.setTurretSpeed(0)));
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        turretLeft.onTrue(new InstantCommand(() -> shooter.wantedTurretAngle -= 0.2));
 
-        turretRight.onTrue(new InstantCommand(() -> shooter.setTurretSpeed(-0.1)));
-        turretRight.onFalse(new InstantCommand(() -> shooter.setTurretSpeed(0)));
+        turretRight.onTrue(new InstantCommand(() ->  shooter.wantedTurretAngle += 0.2));
+
+        hoodUp.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(-0.02)))));
+
+        hoodDown.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(0.02)))));
     }
 
     /**
