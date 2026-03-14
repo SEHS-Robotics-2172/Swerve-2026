@@ -31,6 +31,9 @@ public class Robot extends TimedRobot {
   private Shooter shooter;
   private XboxController driver;
 
+  double ZTranslation = 0;
+  double XTranslation = 0;
+
   Orchestra music = new Orchestra();
 
   /**
@@ -113,9 +116,20 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
+    ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace("limelight-ruban").getZ();
+    XTranslation = LimelightHelpers.getCameraPose3d_TargetSpace("limelight-ruban").getX();
+    
+
     /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
     LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
     */
+    shooter.wantedTurretAngle -= (LimelightHelpers.getTX("limelight-ruban") * 0.85) * 0.1 * kDefaultPeriod;
+    if (ZTranslation <= 2){
+      shooter.wantedHoodAngle = 0;
+    }
+    else if (ZTranslation > 2 && ZTranslation <= 3.7){
+      shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
+    }
   }
 
   @Override

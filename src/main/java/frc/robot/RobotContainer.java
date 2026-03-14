@@ -35,8 +35,8 @@ public class RobotContainer {
     private final Trigger turretLeft = new Trigger(driver::getRightBumperButton);
     private final Trigger turretRight = new Trigger(driver::getLeftBumperButton);
 
-    private final Trigger hoodUp = new Trigger(driver::getRightStickButton); 
-    private final Trigger hoodDown = new Trigger(driver::getLeftStickButton); 
+    private final Trigger hoodUp = new Trigger(()->driver.getPOV()==180); 
+    private final Trigger hoodDown = new Trigger(()->driver.getPOV()==0); 
     private final Trigger intakeMode = new Trigger(()->driver.getRawButton(XboxController.Button.kStart.value));
 
     
@@ -61,7 +61,7 @@ public class RobotContainer {
                   () -> robotCentric.getAsBoolean()
               )
           );
-        i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, () -> driver.getRightTriggerAxis(), intakeMode)); // -driver.getLeftTriggerAxis()
+        i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, () -> driver.getRightTriggerAxis()-driver.getLeftTriggerAxis(), intakeMode)); // -driver.getLeftTriggerAxis()
         shooter.setDefaultCommand(new DefaultShooter(shooter, () -> driver.getPOV() == 0, () -> driver.getPOV() == 180, driver::getLeftTriggerAxis));
 
         //Configure the button bindings
@@ -77,13 +77,13 @@ public class RobotContainer {
     private void configureButtonBindings() {
         /* Driver Buttons */
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
-        turretLeft.onTrue(new InstantCommand(() -> shooter.wantedTurretAngle -= 0.2));
+        //turretLeft.onTrue(new InstantCommand(() -> shooter.wantedTurretAngle -= 0.2));
 
-        turretRight.onTrue(new InstantCommand(() ->  shooter.wantedTurretAngle += 0.2));
+        //turretRight.onTrue(new InstantCommand(() ->  shooter.wantedTurretAngle += 0.2));
 
-        hoodUp.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(-0.02)))));
+        hoodUp.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(-0.002)))));
 
-        hoodDown.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(0.02)))));
+        hoodDown.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(0.002)))));
     }
 
     /**

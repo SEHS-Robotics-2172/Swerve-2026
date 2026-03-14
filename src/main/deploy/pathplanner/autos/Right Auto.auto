@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOn"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Intake"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeOff"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Return"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Right Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

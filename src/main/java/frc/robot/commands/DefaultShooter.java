@@ -36,7 +36,7 @@ public class DefaultShooter extends Command {
   public void execute() {
 
     // Temporary Code for manual control
-    tagPosition = LimelightHelpers.getTargetPose3d_CameraSpace("limelight");
+    // tagPosition = LimelightHelpers.getTargetPose3d_CameraSpace("limelight");
     // shooter.setFlyWheelSpeed(speed.getAsDouble() * 12);
     
 

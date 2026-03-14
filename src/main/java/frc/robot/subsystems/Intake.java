@@ -32,7 +32,7 @@ public class Intake extends SubsystemBase {
   public Intake() {
     topIntake = new TalonFX(IntakeConstants.topIntake);
     bottomIntake = new TalonFX(IntakeConstants.bottomIntake);
-    funnelIntake = new TalonFX(IntakeConstants.funnelIntake);
+    funnelIntake = new TalonFX(IntakeConstants.funnelIntake, "canivore");
 
     topIntakeConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
     bottomIntakeConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
@@ -51,7 +51,7 @@ public class Intake extends SubsystemBase {
 
   public void setSpeed(double intakeSpeed, boolean intakeMode) {//changing name of revspeed later - Merrick
     topIntake.set(intakeSpeed);
-    if (!intakeMode){
+    if (intakeMode){
       funnelIntake.set(intakeSpeed);
       bottomIntake.set(intakeSpeed);
     }

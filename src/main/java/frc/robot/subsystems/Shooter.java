@@ -19,9 +19,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
@@ -37,35 +39,35 @@ public class Shooter extends SubsystemBase {
   private TalonFXConfiguration hoodConfiguration;
   private CANcoderConfiguration turretEncoderConfig;
   private CANcoderConfiguration hoodEncoderConfig;
-  private double flywheelSpeed = 1850;
+  private double flywheelSpeed = 2000;
   private double theoreticalDistance;
-
-  // 4 = 94 in
-  // 6 = 
+  // @ 2k rpm:
+  // 0 Rot = 2.05 m
+  // 0.05 Rot = 3.67m;
 
   private double wantedHoodSpeed = 0;
   private double wantedTurretSpeed = 0;
 
-  private double wantedHoodAngle = 0;
+  public double wantedHoodAngle = 0.05;
   public double wantedTurretAngle = 0;
 
-  private double wantedFlyWheelVoltage = 0;
+  private double wantedFlyWheelVoltage;
 
   private PIDController hoodPID;
   private PIDController turretPID;
   private VelocityVoltage flywheelPID;
   public Shooter() {
-    flyWheel = new TalonFX(ShooterConstants.flyWheel);
-    turret = new TalonFX(ShooterConstants.turret);
-    hood = new TalonFX(ShooterConstants.hood);
-    turretEncoder = new CANcoder(ShooterConstants.turretEncoder);
+    flyWheel = new TalonFX(ShooterConstants.flyWheel, "canivore");
+    turret = new TalonFX(ShooterConstants.turret, "canivore");
+    hood = new TalonFX(ShooterConstants.hood, "canivore");
+    turretEncoder = new CANcoder(ShooterConstants.turretEncoder, "canivore");
 
-    hoodPID = new PIDController(1, 0.05 , 0);
-    turretPID = new PIDController(0.5, 0, 0);
+    hoodPID = new PIDController(5, 0.1 , 0);
+    turretPID = new PIDController(6, 0, 0);
     flywheelPID = new VelocityVoltage(flywheelSpeed / 60);
 
 
-    hoodEncoder = new CANcoder(Constants.ShooterConstants.hoodEncoder);
+    hoodEncoder = new CANcoder(Constants.ShooterConstants.hoodEncoder, "canivore");
 
 
     //ruban transparent
@@ -87,8 +89,9 @@ public class Shooter extends SubsystemBase {
     hoodEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
-    flyWheelConfiguration.Slot0.kP = 1.2;
-    flyWheelConfiguration.Slot0.kV = 0.133;
+    flyWheelConfiguration.Slot0.kP = 0.8;
+    flyWheelConfiguration.Slot0.kV = 0.121;
+    
 
     hoodEncoderConfig.MagnetSensor.MagnetOffset = Constants.ShooterConstants.hoodEncoderOffset.getRotations();
     turretEncoderConfig.MagnetSensor.MagnetOffset = Constants.ShooterConstants.turretEncoderOffset.getRotations();
@@ -104,13 +107,14 @@ public class Shooter extends SubsystemBase {
 
   @Override
   public void periodic() {
+    wantedTurretAngle = MathUtil.clamp(wantedTurretAngle, 0, 4.65);
     hoodPID.setSetpoint(wantedHoodAngle);
     wantedHoodSpeed = hoodPID.calculate(hoodEncoder.getPosition().getValueAsDouble());
-    hood.set(wantedHoodSpeed);
+    hood.set(MathUtil.clamp(wantedHoodSpeed, -0.05, 0.05));
     
     turretPID.setSetpoint(wantedTurretAngle);
     wantedTurretSpeed = -turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
-    turret.set(MathUtil.clamp(wantedTurretSpeed, -0.1, 0.1));
+    turret.setVoltage(MathUtil.clamp(wantedTurretSpeed, -1, 1));
     
     flywheelPID = flywheelPID.withVelocity(flywheelSpeed / 60);
     
@@ -132,8 +136,8 @@ public class Shooter extends SubsystemBase {
       )
     ) / -9.81) / 10 * Math.cos((Math.PI - ((hoodEncoder.getPosition().getValueAsDouble()  * 2 * Math.PI) + Math.PI/2)))
     );
-
-    wantedTurretAngle += LimelightHelpers.getTX("limelight-Reuben") * 0.01;
+    
+    
 
     SmartDashboard.putNumber("Hood Wanted Speed", wantedHoodSpeed);
     SmartDashboard.putNumber("Turret Wanted Speed", wantedTurretSpeed);
@@ -145,7 +149,7 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Wanted Voltage", wantedFlyWheelVoltage);
     SmartDashboard.putNumber("Flywheel ", flywheelSpeed / 60);
     SmartDashboard.putNumber("Theoretical Distance", theoreticalDistance);
-
+  
   }
 
   public void setWantedHoodAngle(Rotation2d angle){
