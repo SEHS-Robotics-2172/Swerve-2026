@@ -5,6 +5,7 @@
 package frc.robot;
 
 import com.ctre.phoenix6.Orchestra;
+import com.pathplanner.lib.commands.FollowPathCommand;
 
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -36,16 +37,13 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    //hand = m_robotContainer.hand;
-    //swerve = m_robotContainer.s_Swerve;
-
     /*
     if (robot.existing == true) {
     //  robot.fix();
     //  robot.work();
     }
     */
-
+    FollowPathCommand.warmupCommand().schedule();
   }
 
   /**
@@ -74,12 +72,12 @@ public class Robot extends TimedRobot {
   /** This autonomous runs the autonomous command selected by your {@link RobotContainer} class. */
   @Override
   public void autonomousInit() {
-    // m_autonomousCommand = m_robotContainer.getAutonomousCommand();
+    m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
-    // // schedule the autonomous command (example)
-    // if (m_autonomousCommand != null) {
-    //   CommandScheduler.getInstance().schedule(m_autonomousCommand);
-    // }
+    // schedule the autonomous command (example)
+    if (m_autonomousCommand != null) {
+      CommandScheduler.getInstance().schedule(m_autonomousCommand);
+    }
   }
 
   /** This function is called periodically during autonomous. */
@@ -96,9 +94,6 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    music.loadMusic("output.chrp");
-
-    music.play();
   }
 
   /** This function is called periodically during operator control. */

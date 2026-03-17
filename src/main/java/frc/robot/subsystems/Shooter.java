@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase {
   private double wantedTurretSpeed = 0;
 
   public double wantedHoodAngle = 0;
-  public double wantedTurretAngle = 0;
+  public double wantedTurretAngle = 2.7;
 
   private double wantedFlyWheelVoltage;
 

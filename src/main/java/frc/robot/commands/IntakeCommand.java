@@ -32,7 +32,6 @@ public class IntakeCommand extends Command{
 
   @Override
   public void end(boolean interrupted) {
-    i_Intake.setSpeed(0, IntakeMode.getAsBoolean());
     //Ruban transparent
   }
 

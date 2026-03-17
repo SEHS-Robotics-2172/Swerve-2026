@@ -19,7 +19,7 @@ public final class Constants {
         public static final int pigeonID = 40;
 
         public static final COTSTalonFXSwerveConstants chosenModule =
-        COTSTalonFXSwerveConstants.WCP.SwerveXFlipped.Falcon500(COTSTalonFXSwerveConstants.WCP.SwerveXFlipped.driveRatios.X2_12);
+        COTSTalonFXSwerveConstants.WCP.SwerveXFlipped.KrakenX60(COTSTalonFXSwerveConstants.WCP.SwerveXFlipped.driveRatios.X1_12 * 0.98);
 
         /* Drivetrain Constants */
         public static final double trackWidth = Units.inchesToMeters(28.7); //TODO: This must be tuned to specific robot
@@ -161,7 +161,7 @@ public final class Constants {
         public static final int hoodEncoder = 29;
 
         public static final Rotation2d hoodEncoderOffset = Rotation2d.fromRotations(-.41);
-        public static final Rotation2d turretEncoderOffset = Rotation2d.fromRotations(0.32);
+        public static final Rotation2d turretEncoderOffset = Rotation2d.fromRotations(0.27);
         
     }
 }

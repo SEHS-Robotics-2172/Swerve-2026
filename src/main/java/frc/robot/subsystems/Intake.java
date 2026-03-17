@@ -49,9 +49,9 @@ public class Intake extends SubsystemBase {
     funnelIntake.getConfigurator().apply(funnelIntakeConfiguration);
   }
 
-  public void setSpeed(double intakeSpeed, boolean intakeMode) {//changing name of revspeed later - Merrick
+  public void setSpeed(double intakeSpeed, boolean shooterMode) {//changing name of revspeed later - Merrick
     topIntake.set(intakeSpeed);
-    if (intakeMode){
+    if (shooterMode){
       funnelIntake.set(intakeSpeed);
       bottomIntake.set(intakeSpeed);
     }

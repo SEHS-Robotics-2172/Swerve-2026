@@ -1,8 +1,13 @@
 package frc.robot;
 
+import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
+
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -18,6 +23,7 @@ import frc.robot.subsystems.*;
  * subsystems, commands, and button mappings) should be declared here.
  */
 public class RobotContainer {
+    private final SendableChooser<Command> autoChooser;
     /* Controllers */
     public final XboxController driver = new XboxController(1);
     public final XboxController co_driver = new XboxController(2);
@@ -54,6 +60,18 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
+        NamedCommands.registerCommand("IntakeOn", new IntakeOn(i_Intake, false));
+        NamedCommands.registerCommand("IntakeShootOn", new IntakeOn(i_Intake, true));
+        NamedCommands.registerCommand("IntakeShootOff", new IntakeOff(i_Intake));
+        NamedCommands.registerCommand("IntakeOff", new IntakeOff(i_Intake));
+
+        NamedCommands.registerCommand("Shoot", new Shoot(i_Intake, shooter));
+        NamedCommands.registerCommand("Delay", new Delay(5));
+        
+        autoChooser = AutoBuilder.buildAutoChooser();
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
+
         s_Swerve.setDefaultCommand(
               new TeleopSwerve(
                   s_Swerve, 
@@ -64,7 +82,6 @@ public class RobotContainer {
               )
           );
         i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, () -> driver.getRightTriggerAxis()-driver.getLeftTriggerAxis(), intakeMode)); // -driver.getLeftTriggerAxis()
-        CommandScheduler.getInstance().schedule(defaultShooter);
         // shooter.setDefaultCommand(new DefaultShooter(shooter, () -> driver.getPOV() == 0, () -> driver.getPOV() == 180, driver::getLeftTriggerAxis));
 
         //Configure the button bindings
@@ -94,8 +111,7 @@ public class RobotContainer {
      *
      * @return the command to run in autonomous
      */
-    //public Command getAutonomousCommand() {
-        // An ExampleCommand will run in autonomous
-        // return new exampleAuto(s_Swerve);
-    //}
+    public Command getAutonomousCommand() {
+        return autoChooser.getSelected();
+    }
 }
