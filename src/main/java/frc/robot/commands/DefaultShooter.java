@@ -4,11 +4,7 @@
 
 package frc.robot.commands;
 
-import java.util.function.BooleanSupplier;
-import java.util.function.DoubleSupplier;
-
-import edu.wpi.first.math.geometry.Pose3d;
-import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
@@ -18,34 +14,39 @@ import frc.robot.subsystems.Shooter;
 public class DefaultShooter extends Command {
   /** Creates a new DefaultShooter. */
   Shooter shooter;
-  BooleanSupplier up;
-  BooleanSupplier down;
-  Rotation2d wantedHoodAngle = Rotation2d.kZero;
-  Pose3d tagPosition;
-  DoubleSupplier speed;
-  public DefaultShooter(Shooter shooter_, BooleanSupplier up_, BooleanSupplier down_, DoubleSupplier speed_) {
+
+  double ZTranslation = 0;
+  double XTranslation = 0;
+  public DefaultShooter(Shooter shooter_) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooter_;
-    up = up_;
-    down = down_;
-    speed = speed_;
     addRequirements(shooter);
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-
-    // Temporary Code for manual control
-    // tagPosition = LimelightHelpers.getTargetPose3d_CameraSpace("limelight");
-    // shooter.setFlyWheelSpeed(speed.getAsDouble() * 12);
+    ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace(shooter.limelightName).getZ();
+    XTranslation = LimelightHelpers.getCameraPose3d_TargetSpace(shooter.limelightName).getX();
     
 
-    if (up.getAsBoolean()){
-      shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(0.1 * Robot.kDefaultPeriod)));
+    /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
+    LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
+    */
+    shooter.wantedTurretAngle -= (LimelightHelpers.getTX(shooter.limelightName) + (XTranslation * 4)) * 0.1 * Robot.kDefaultPeriod;
+    if (ZTranslation <= 1.7){
+      shooter.wantedHoodAngle = 0.01;
     }
-    if(down.getAsBoolean()){
-      shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().minus(Rotation2d.fromRotations(0.1 * Robot.kDefaultPeriod)));
+    else if (ZTranslation > 2 && ZTranslation <= 3.7){
+      shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
     }
-    
+    shooter.flywheelSpeed = 2000;
+    shooter.hood.set(MathUtil.clamp(shooter.wantedHoodSpeed, -0.05, 0.05));
+    shooter.flyWheel.setControl(shooter.flywheelPID);
+  }
+  @Override
+  public void end(boolean interupted){
+    shooter.flywheelSpeed = 0;
+    shooter.hood.set(0);
+    shooter.flyWheel.set(0);
   }
 }

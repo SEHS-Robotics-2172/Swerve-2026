@@ -7,12 +7,8 @@ package frc.robot;
 import com.ctre.phoenix6.Orchestra;
 
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Shooter;
-import frc.robot.subsystems.Swerve;
 
 /**
  * The VM is configured to automatically run this class, and to call the functions corresponding to
@@ -25,11 +21,6 @@ public class Robot extends TimedRobot {
 
   private Command m_autonomousCommand;
   private RobotContainer m_robotContainer;
-  
-  private Swerve swerve;
-  private Intake intake;
-  private Shooter shooter;
-  private XboxController driver;
 
   double ZTranslation = 0;
   double XTranslation = 0;
@@ -45,9 +36,6 @@ public class Robot extends TimedRobot {
     // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
     // autonomous chooser on the dashboard.
     m_robotContainer = new RobotContainer();
-    intake = m_robotContainer.i_Intake;
-    driver = m_robotContainer.driver;
-    shooter = m_robotContainer.shooter;
     //hand = m_robotContainer.hand;
     //swerve = m_robotContainer.s_Swerve;
 
@@ -116,20 +104,7 @@ public class Robot extends TimedRobot {
   /** This function is called periodically during operator control. */
   @Override
   public void teleopPeriodic() {
-    ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace("limelight-ruban").getZ();
-    XTranslation = LimelightHelpers.getCameraPose3d_TargetSpace("limelight-ruban").getX();
     
-
-    /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
-    LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
-    */
-    shooter.wantedTurretAngle -= (LimelightHelpers.getTX("limelight-ruban") * 0.85) * 0.1 * kDefaultPeriod;
-    if (ZTranslation <= 2){
-      shooter.wantedHoodAngle = 0;
-    }
-    else if (ZTranslation > 2 && ZTranslation <= 3.7){
-      shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
-    }
   }
 
   @Override

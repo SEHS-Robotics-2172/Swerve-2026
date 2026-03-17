@@ -34,7 +34,7 @@ public class Intake extends SubsystemBase {
     bottomIntake = new TalonFX(IntakeConstants.bottomIntake);
     funnelIntake = new TalonFX(IntakeConstants.funnelIntake, "canivore");
 
-    topIntakeConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    topIntakeConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     bottomIntakeConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     funnelIntakeConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 

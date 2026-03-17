@@ -28,9 +28,9 @@ import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
   /** Creates a new Shooter. */
-  private TalonFX flyWheel;
+  public TalonFX flyWheel;
   private TalonFX turret;
-  private TalonFX hood;
+  public TalonFX hood;
   private CANcoder turretEncoder;
   private CANcoder hoodEncoder;
   
@@ -39,30 +39,31 @@ public class Shooter extends SubsystemBase {
   private TalonFXConfiguration hoodConfiguration;
   private CANcoderConfiguration turretEncoderConfig;
   private CANcoderConfiguration hoodEncoderConfig;
-  private double flywheelSpeed = 2000;
-  private double theoreticalDistance;
+  public double flywheelSpeed = 1850; // 2000
   // @ 2k rpm:
   // 0 Rot = 2.05 m
   // 0.05 Rot = 3.67m;
 
-  private double wantedHoodSpeed = 0;
+  public double wantedHoodSpeed = 0;
   private double wantedTurretSpeed = 0;
 
-  public double wantedHoodAngle = 0.05;
+  public double wantedHoodAngle = 0;
   public double wantedTurretAngle = 0;
 
   private double wantedFlyWheelVoltage;
 
+  public String limelightName = "limelight-hub";
+
   private PIDController hoodPID;
   private PIDController turretPID;
-  private VelocityVoltage flywheelPID;
+  public VelocityVoltage flywheelPID;
   public Shooter() {
     flyWheel = new TalonFX(ShooterConstants.flyWheel, "canivore");
     turret = new TalonFX(ShooterConstants.turret, "canivore");
     hood = new TalonFX(ShooterConstants.hood, "canivore");
     turretEncoder = new CANcoder(ShooterConstants.turretEncoder, "canivore");
 
-    hoodPID = new PIDController(5, 0.1 , 0);
+    hoodPID = new PIDController(6, 0 , 0);
     turretPID = new PIDController(6, 0, 0);
     flywheelPID = new VelocityVoltage(flywheelSpeed / 60);
 
@@ -93,7 +94,7 @@ public class Shooter extends SubsystemBase {
     flyWheelConfiguration.Slot0.kV = 0.121;
     
 
-    hoodEncoderConfig.MagnetSensor.MagnetOffset = Constants.ShooterConstants.hoodEncoderOffset.getRotations();
+    hoodEncoderConfig.MagnetSensor.MagnetOffset = 0;
     turretEncoderConfig.MagnetSensor.MagnetOffset = Constants.ShooterConstants.turretEncoderOffset.getRotations();
 
     //ruban transparent 🦐🦐🦐🦐🦐
@@ -109,8 +110,8 @@ public class Shooter extends SubsystemBase {
   public void periodic() {
     wantedTurretAngle = MathUtil.clamp(wantedTurretAngle, 0, 4.65);
     hoodPID.setSetpoint(wantedHoodAngle);
-    wantedHoodSpeed = hoodPID.calculate(hoodEncoder.getPosition().getValueAsDouble());
-    hood.set(MathUtil.clamp(wantedHoodSpeed, -0.05, 0.05));
+    wantedHoodSpeed = hoodPID.calculate(hoodEncoder.getPosition().getValueAsDouble() + Constants.ShooterConstants.hoodEncoderOffset.getRotations());
+
     
     turretPID.setSetpoint(wantedTurretAngle);
     wantedTurretSpeed = -turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
@@ -118,26 +119,7 @@ public class Shooter extends SubsystemBase {
     
     flywheelPID = flywheelPID.withVelocity(flywheelSpeed / 60);
     
-    flyWheel.setControl(flywheelPID);
 
-    theoreticalDistance = 
-    (((-10 * Math.sin(
-      Math.PI - ((hoodEncoder.getPosition().getValueAsDouble()  * 2 * Math.PI) + Math.PI/2)
-      )
-    )
-     - 
-    (Math.sqrt(
-      Math.pow(
-        10 * Math.sin(
-          Math.PI - ((hoodEncoder.getPosition().getValueAsDouble()  * 2 * Math.PI) + Math.PI/2)
-          ), 2
-        )
-      - (4 * (4.905) * 1.83)
-      )
-    ) / -9.81) / 10 * Math.cos((Math.PI - ((hoodEncoder.getPosition().getValueAsDouble()  * 2 * Math.PI) + Math.PI/2)))
-    );
-    
-    
 
     SmartDashboard.putNumber("Hood Wanted Speed", wantedHoodSpeed);
     SmartDashboard.putNumber("Turret Wanted Speed", wantedTurretSpeed);
@@ -148,8 +130,6 @@ public class Shooter extends SubsystemBase {
     SmartDashboard.putNumber("Motor RPS", flyWheel.getVelocity().getValueAsDouble());
     SmartDashboard.putNumber("Wanted Voltage", wantedFlyWheelVoltage);
     SmartDashboard.putNumber("Flywheel ", flywheelSpeed / 60);
-    SmartDashboard.putNumber("Theoretical Distance", theoreticalDistance);
-  
   }
 
   public void setWantedHoodAngle(Rotation2d angle){
