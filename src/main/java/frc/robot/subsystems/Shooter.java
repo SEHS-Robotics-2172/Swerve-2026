@@ -111,6 +111,7 @@ public class Shooter extends SubsystemBase {
     wantedTurretAngle = MathUtil.clamp(wantedTurretAngle, 0, 4.65);
     hoodPID.setSetpoint(wantedHoodAngle);
     wantedHoodSpeed = hoodPID.calculate(hoodEncoder.getPosition().getValueAsDouble() + Constants.ShooterConstants.hoodEncoderOffset.getRotations());
+    hood.set(MathUtil.clamp(wantedHoodSpeed, -0.05, 0.05));
 
     
     turretPID.setSetpoint(wantedTurretAngle);

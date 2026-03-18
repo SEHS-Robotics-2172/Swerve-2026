@@ -8,6 +8,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
@@ -17,16 +18,17 @@ public class DefaultShooter extends Command {
 
   double ZTranslation = 0;
   double XTranslation = 0;
-  public DefaultShooter(Shooter shooter_) {
+  RobotContainer container;
+  public DefaultShooter(Shooter shooter_, RobotContainer container_) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooter_;
-    // addRequirements(shooter);
-
+    container = container_;
   }
 
   @Override
   public void initialize(){
-    shooter.getCurrentCommand().cancel();
+    if (container.hoardShooter != null)
+      container.hoardShooter.cancel();
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
@@ -46,7 +48,6 @@ public class DefaultShooter extends Command {
       shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
     }
     shooter.flywheelSpeed = 2000;
-    shooter.hood.set(MathUtil.clamp(shooter.wantedHoodSpeed, -0.05, 0.05));
     shooter.flyWheel.setControl(shooter.flywheelPID);
   }
   @Override
@@ -54,5 +55,6 @@ public class DefaultShooter extends Command {
     shooter.flywheelSpeed = 0;
     shooter.hood.set(0);
     shooter.flyWheel.set(0);
+    shooter.wantedHoodAngle = 0;
   }
 }
