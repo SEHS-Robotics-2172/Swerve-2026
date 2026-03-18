@@ -38,6 +38,7 @@ public class RobotContainer {
     private final Trigger robotCentric = new JoystickButton(driver, XboxController.Button.kLeftBumper.value);
 
     private final Trigger shooterToggle = new JoystickButton(driver, XboxController.Button.kX.value);
+    private final Trigger hoardToggle = new JoystickButton(driver, XboxController.Button.kA.value);
 
     private final Trigger AutoIntakeTrigger = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 

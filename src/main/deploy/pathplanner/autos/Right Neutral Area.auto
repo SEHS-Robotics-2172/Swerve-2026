@@ -5,6 +5,18 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Right Shoot from Start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "IntakeOn"
@@ -13,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Intake"
+            "pathName": "Right Shoot to Neutral"
           }
         },
         {
@@ -25,13 +37,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Right Return"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Right Shoot"
+            "pathName": "Right Neutral to Shoot"
           }
         },
         {

@@ -4,7 +4,6 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import frc.robot.subsystems.Intake;
@@ -18,7 +17,7 @@ public class Shoot extends ParallelCommandGroup {
   public Shoot(Intake intake_, Shooter shooter_) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterOn(shooter_, 7), new SequentialCommandGroup(new Delay(1), new IntakeOn(intake_, true)));
+    addCommands(new ShooterOn(shooter_, 5.5), new SequentialCommandGroup(new Delay(0.5), new IntakeOn(intake_, true)));
   }
   
 }

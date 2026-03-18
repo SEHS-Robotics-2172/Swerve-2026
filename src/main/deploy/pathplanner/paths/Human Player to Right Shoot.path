@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.02,
-        "y": 0.65
+        "x": 0.5720101522773082,
+        "y": 0.6233908629434131
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.658544061300581,
-        "y": 1.9853065134057637
+        "x": 1.5720101522773082,
+        "y": 0.6233908629434133
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Human Player"
     },
     {
       "anchor": {
-        "x": 2.406532567049809,
-        "y": 2.7161398467432947
+        "x": 1.538862944162437,
+        "y": 1.8572791878172596
       },
       "prevControl": {
-        "x": 2.2385249042124595,
-        "y": 2.489329501911509
+        "x": 0.5388629441624371,
+        "y": 1.8572791878172596
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Right Shoot"
     }
   ],
   "rotationTargets": [],
@@ -42,7 +42,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 32.47119229084853
+    "rotation": 27.149681697783322
   },
   "reversed": false,
   "folder": null,

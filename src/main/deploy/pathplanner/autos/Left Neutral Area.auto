@@ -5,6 +5,18 @@
     "data": {
       "commands": [
         {
+          "type": "path",
+          "data": {
+            "pathName": "Left Shoot from Start"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
+          }
+        },
+        {
           "type": "named",
           "data": {
             "name": "IntakeOn"
@@ -13,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center Intake"
+            "pathName": "Left Shoot to Neutral"
           }
         },
         {
@@ -25,19 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Center Shoot"
+            "pathName": "Left Neutral to Shoot"
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Shoot"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "Center Extra"
           }
         }
       ]

@@ -7,7 +7,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Shoot from Start"
+            "pathName": "Right Shoot from Start"
           }
         },
         {
@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Shoot to Intake"
+            "pathName": "Right Shoot to Human Player"
           }
         },
         {
@@ -37,7 +37,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Left Intake to Shoot"
+            "pathName": "Human Player to Right Shoot"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Shoot"
           }
         }
       ]

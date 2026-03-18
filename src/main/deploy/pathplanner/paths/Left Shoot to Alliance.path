@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.71,
-        "y": 5.942
+        "x": 1.52,
+        "y": 5.715
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.499291187739464,
-        "y": 5.597471264367816
+        "x": 2.3952182741116754,
+        "y": 6.562629441624365
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Left Shoot"
     },
     {
       "anchor": {
-        "x": 2.2301245210727974,
-        "y": 4.892
+        "x": 0.508,
+        "y": 6.305
       },
       "prevControl": {
-        "x": 1.1800766283524906,
-        "y": 5.320419540229887
+        "x": 1.5485181517653928,
+        "y": 6.360241474607228
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Blue Alliance Balls"
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -22.329
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -36.39817723816442
   },
   "useDefaultConstraints": true
 }
