@@ -58,6 +58,7 @@ public class RobotContainer {
     
     private final Command AutoIntake = new TrackFuel(i_Intake, s_Swerve);
     private final Command defaultShooter = new DefaultShooter(shooter);
+    private final Command hoardShooter = new HoardShooter(shooter);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -100,7 +101,9 @@ public class RobotContainer {
         zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
         
         AutoIntakeTrigger.toggleOnTrue(AutoIntake);
+
         shooterToggle.toggleOnTrue(defaultShooter);
+        hoardToggle.toggleOnTrue(hoardShooter);
 
         hoodUp.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(-0.002)))));
 

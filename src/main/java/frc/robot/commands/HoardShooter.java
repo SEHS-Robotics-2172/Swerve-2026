@@ -11,13 +11,13 @@ import frc.robot.Robot;
 import frc.robot.subsystems.Shooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DefaultShooter extends Command {
+public class HoardShooter extends Command {
   /** Creates a new DefaultShooter. */
   Shooter shooter;
 
   double ZTranslation = 0;
   double XTranslation = 0;
-  public DefaultShooter(Shooter shooter_) {
+  public HoardShooter(Shooter shooter_) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooter_;
     // addRequirements(shooter);
@@ -31,21 +31,9 @@ public class DefaultShooter extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace(shooter.limelightName).getZ();
-    XTranslation = LimelightHelpers.getCameraPose3d_TargetSpace(shooter.limelightName).getX();
-    
-
-    /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
-    LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
-    */
-    shooter.wantedTurretAngle -= (LimelightHelpers.getTX(shooter.limelightName) + (XTranslation * 4)) * 0.1 * Robot.kDefaultPeriod;
-    if (ZTranslation <= 1.7){
-      shooter.wantedHoodAngle = -0.01;
-    }
-    else if (ZTranslation > 2 && ZTranslation <= 3.7){
-      shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
-    }
-    shooter.flywheelSpeed = 2000;
+    shooter.wantedTurretAngle = 6.7;
+    shooter.wantedHoodAngle = 0.1;
+    shooter.flywheelSpeed = 4000;
     shooter.hood.set(MathUtil.clamp(shooter.wantedHoodSpeed, -0.05, 0.05));
     shooter.flyWheel.setControl(shooter.flywheelPID);
   }
