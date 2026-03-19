@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 0.508,
-        "y": 6.305
+        "x": 0.820629441624366,
+        "y": 6.093015228426395
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.5066295347545737,
-        "y": 6.3573359562429435
+        "x": 1.8192589763789397,
+        "y": 6.145351184669339
       },
       "isLocked": false,
       "linkedName": "Blue Alliance Balls"
