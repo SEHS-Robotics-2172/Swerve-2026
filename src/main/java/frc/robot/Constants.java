@@ -150,6 +150,7 @@ public final class Constants {
         public static final int topIntake = 50;
         public static final int bottomIntake = 51;
         public static final int funnelIntake = 53; // NOT REV 🥳
+        public static final int randomAddedMotor = 54;
     }
 
     public static final class ShooterConstants {

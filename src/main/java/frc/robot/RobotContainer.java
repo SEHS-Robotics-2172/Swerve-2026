@@ -72,7 +72,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("Shoot", new Shoot(i_Intake, shooter));
         NamedCommands.registerCommand("Delay", new Delay(5));
         
-        autoChooser = AutoBuilder.buildAutoChooser();
+        autoChooser = new SendableChooser<>();//AutoBuilder.buildAutoChooser();
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
 
