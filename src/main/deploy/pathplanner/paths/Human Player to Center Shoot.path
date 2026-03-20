@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.538862944162437,
-        "y": 1.8572791878172596
-      },
-      "prevControl": null,
-      "nextControl": {
-        "x": 1.817131681004593,
-        "y": 2.2012167999002905
-      },
-      "isLocked": false,
-      "linkedName": "Right Shoot"
-    },
-    {
-      "anchor": {
         "x": 0.45,
         "y": 0.6233908629434131
       },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.4500000000000028,
+        "y": 0.6233908629434133
+      },
+      "isLocked": false,
+      "linkedName": "Human Player"
+    },
+    {
+      "anchor": {
+        "x": 1.7,
+        "y": 4.0
+      },
       "prevControl": {
-        "x": 0.594746190218828,
-        "y": 0.8272254537692494
+        "x": 2.1097664974619295,
+        "y": 2.897796954314722
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "Human Player"
+      "linkedName": "Center Shoot"
     }
   ],
   "rotationTargets": [],
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 27.149681697783322
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

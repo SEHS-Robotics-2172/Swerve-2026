@@ -90,7 +90,7 @@ public class Shooter extends SubsystemBase {
     hoodEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
     turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
-    flyWheelConfiguration.Slot0.kP = 0.8;
+    flyWheelConfiguration.Slot0.kP = 1.1;
     flyWheelConfiguration.Slot0.kV = 0.121;
     
 
@@ -116,7 +116,7 @@ public class Shooter extends SubsystemBase {
     
     turretPID.setSetpoint(wantedTurretAngle);
     wantedTurretSpeed = -turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
-    turret.setVoltage(MathUtil.clamp(wantedTurretSpeed, -1, 1));
+    turret.setVoltage(MathUtil.clamp(wantedTurretSpeed, -3, 3));
     
     flywheelPID = flywheelPID.withVelocity(flywheelSpeed / 60);
     

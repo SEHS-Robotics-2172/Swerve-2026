@@ -16,37 +16,44 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private TalonFX topIntake;
   private TalonFX bottomIntake;
+  private TalonFX topIntake2;
   private TalonFX funnelIntake;
   private TalonFX randomAddedMotor;
 
   private TalonFXConfiguration topIntakeConfiguration = new TalonFXConfiguration();
   private TalonFXConfiguration bottomIntakeConfiguration = new TalonFXConfiguration();
+    private TalonFXConfiguration topIntake2Configuration = new TalonFXConfiguration();
   private TalonFXConfiguration funnelIntakeConfiguration = new TalonFXConfiguration();
 
   public Intake() {
     topIntake = new TalonFX(IntakeConstants.topIntake);
     bottomIntake = new TalonFX(IntakeConstants.bottomIntake);
+    topIntake2 = new TalonFX(IntakeConstants.topIntake2);
     funnelIntake = new TalonFX(IntakeConstants.funnelIntake, "canivore");
     randomAddedMotor = new TalonFX(IntakeConstants.randomAddedMotor);
 
     topIntakeConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     bottomIntakeConfiguration.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
     funnelIntakeConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+    topIntake2Configuration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     //set the idle mode to break
 
     topIntakeConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     bottomIntakeConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     funnelIntakeConfiguration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+    topIntake2Configuration.MotorOutput.NeutralMode = NeutralModeValue.Brake;
     
     topIntake.getConfigurator().apply(topIntakeConfiguration);
     bottomIntake.getConfigurator().apply(bottomIntakeConfiguration);
     funnelIntake.getConfigurator().apply(funnelIntakeConfiguration);
     randomAddedMotor.getConfigurator().apply(funnelIntakeConfiguration); // Change this if we EVER change the funnel motor
+    topIntake2.getConfigurator().apply(topIntake2Configuration);
   }
 
   public void setSpeed(double intakeSpeed, boolean shooterMode) {//changing name of revspeed later - Merrick
     topIntake.set(intakeSpeed);
+    topIntake2.set(intakeSpeed);
     if (shooterMode){
       funnelIntake.set(intakeSpeed);
       bottomIntake.set(intakeSpeed);
