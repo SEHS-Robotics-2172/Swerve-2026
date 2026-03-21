@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Rotation3d;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
@@ -47,19 +48,29 @@ public class ShooterTest extends Command {
   @Override
   public void execute() {
     ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace(shooter.limelightName).getZ();
-    robotPose3d = LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub").plus(new Transform3d(0, 0, 0.595, Rotation3d.kZero));
-    robotRotation = Rotation2d.fromDegrees(swerve.gyro.getYaw().getValueAsDouble());
+
+    robotPose3d = LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub").plus(new Transform3d(0, 0, -0.595, Rotation3d.kZero));
+    robotRotation = swerve.getGyroYaw();
     turretRotation = shooter.getCurrentTurretAngle().div(10).plus(robotRotation);
-    wantedTurretAngle = Math.atan(robotPose3d.getZ() / robotPose3d.getX());
-    shooter.setWantedTurretAngle(wantedTurretAngle);
+    wantedTurretAngle = Math.atan2(-robotPose3d.getZ() , -robotPose3d.getX()) / (2 * Math.PI) - robotRotation.getRotations();
+    if (LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub") != Pose3d.kZero)
+      shooter.setWantedTurretAngle(Math.abs(wantedTurretAngle));
+    else{
+      shooter.setWantedTurretAngle(wantedTurretAngle);
+    }
+
+
     if (ZTranslation <= 1.7){
       shooter.wantedHoodAngle = -0.01;
     }
     else if (ZTranslation > 1.7 && ZTranslation <= 3.7){
       shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
     }
-    shooter.flywheelSpeed = 2000;
+    shooter.flywheelSpeed = 0; // 2000;
     shooter.flyWheel.setControl(shooter.flywheelPID);
+
+    SmartDashboard.putNumber("Gyro Rotation", swerve.getGyroYaw().getRotations());
+    SmartDashboard.putNumber("Test Turret Wanted Angle", wantedTurretAngle);
   }
 
   // Called once the command ends or is interrupted.

@@ -71,7 +71,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Shoot", new Shoot(i_Intake, shooter));
         NamedCommands.registerCommand("Delay", new Delay(3));
-        NamedCommands.registerCommand("ResetGyro", new InstantCommand(() -> s_Swerve.zeroHeading()));
+        NamedCommands.registerCommand("ResetGyro", new InstantCommand(() -> s_Swerve.gyro.reset()));
         
         
 
@@ -103,7 +103,7 @@ public class RobotContainer {
      */
     private void configureButtonBindings() {
         /* Driver Buttons */
-        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.zeroHeading()));
+        zeroGyro.onTrue(new InstantCommand(() -> s_Swerve.gyro.reset()));
         
         AutoIntakeTrigger.toggleOnTrue(AutoIntake);
 

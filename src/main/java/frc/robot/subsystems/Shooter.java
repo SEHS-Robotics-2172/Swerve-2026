@@ -12,18 +12,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.fasterxml.jackson.databind.ser.impl.FilteredBeanPropertyWriter;
-import com.pathplanner.lib.events.CancelCommandEvent;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.LimelightHelpers;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
@@ -88,7 +83,7 @@ public class Shooter extends SubsystemBase {
     hoodConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     hoodEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
     flyWheelConfiguration.Slot0.kP = 1.1;
     flyWheelConfiguration.Slot0.kV = 0.121;
@@ -116,7 +111,7 @@ public class Shooter extends SubsystemBase {
     
     turretPID.setSetpoint(wantedTurretAngle);
     wantedTurretSpeed = turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
-    turret.setVoltage(MathUtil.clamp(wantedTurretSpeed, -3, 3));
+    turret.setVoltage(- MathUtil.clamp(wantedTurretSpeed, -1, 1));
     
     flywheelPID = flywheelPID.withVelocity(flywheelSpeed / 60);
     
