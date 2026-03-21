@@ -17,7 +17,7 @@ public class Shoot extends ParallelCommandGroup {
   public Shoot(Intake intake_, Shooter shooter_) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterOn(shooter_, 4), new SequentialCommandGroup(new Delay(1), new IntakeOn(intake_, true)));
+    addCommands(new ShooterOn(shooter_, 5), new SequentialCommandGroup(new Delay(1), new IntakeOn(intake_, true)));
   }
   
 }

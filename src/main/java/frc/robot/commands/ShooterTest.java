@@ -4,45 +4,54 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Rotation3d;
+import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
-import frc.robot.Robot;
 import frc.robot.RobotContainer;
+import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Shooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class DefaultShooter extends Command {
-  /** Creates a new DefaultShooter. */
+public class ShooterTest extends Command {
   Shooter shooter;
-
-  double ZTranslation = 0;
-  double XTranslation = 0;
+  Swerve swerve;
   RobotContainer container;
-  public DefaultShooter(Shooter shooter_, RobotContainer container_) {
+  Pose3d robotPose3d;
+  Rotation2d turretRotation;
+  Rotation2d robotRotation;
+  double wantedTurretAngle;
+  double ZTranslation;
+  /** Creates a new ShooterTest. */
+  public ShooterTest(Shooter shooter_ ,Swerve swerve_, RobotContainer container_) {
     // Use addRequirements() here to declare subsystem dependencies.
     shooter = shooter_;
+    swerve = swerve_;
     container = container_;
   }
 
+  // Called when the command is initially scheduled.
   @Override
-  public void initialize(){
-    if (container.hoardShooter != null)
+  public void initialize() {
+    if (container.defaultShooter != null){
+      container.defaultShooter.cancel();
+    }
+    if (container.hoardShooter != null){
       container.hoardShooter.cancel();
-    if (container.testShooter != null)
-      container.testShooter.cancel();
+    }
   }
+
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace(shooter.limelightName).getZ();
-    XTranslation = LimelightHelpers.getCameraPose3d_TargetSpace(shooter.limelightName).getX();
-    
-
-    /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
-    LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
-    */
-    shooter.wantedTurretAngle -= (LimelightHelpers.getTX(shooter.limelightName) + (XTranslation * 4)) * 0.1 * Robot.kDefaultPeriod;
+    robotPose3d = LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub").plus(new Transform3d(0, 0, 0.595, Rotation3d.kZero));
+    robotRotation = Rotation2d.fromDegrees(swerve.gyro.getYaw().getValueAsDouble());
+    turretRotation = shooter.getCurrentTurretAngle().div(10).plus(robotRotation);
+    wantedTurretAngle = Math.atan(robotPose3d.getZ() / robotPose3d.getX());
+    shooter.setWantedTurretAngle(wantedTurretAngle);
     if (ZTranslation <= 1.7){
       shooter.wantedHoodAngle = -0.01;
     }
@@ -52,11 +61,13 @@ public class DefaultShooter extends Command {
     shooter.flywheelSpeed = 2000;
     shooter.flyWheel.setControl(shooter.flywheelPID);
   }
+
+  // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interupted){
+  public void end(boolean interrupted) {
     shooter.flywheelSpeed = 0;
-    shooter.hood.set(0);
     shooter.flyWheel.set(0);
     shooter.wantedHoodAngle = 0;
+
   }
 }

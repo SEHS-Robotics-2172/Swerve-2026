@@ -32,8 +32,8 @@ public class TrackFuel extends Command {
   public void execute() {
     intake.setSpeed(1, false);
     swerve.drive(
-      new Translation2d(/*(-LimelightHelpers.getTY("limelight-balls") * 0.05)*/ - 1.5, 0),
-      -LimelightHelpers.getTX("limelight-balls") * 0.12,
+      new Translation2d(/*(-LimelightHelpers.getTY("limelight-balls") * 0.05)*/ - 3, 0),
+      -LimelightHelpers.getTX("limelight-balls") * 0.8,
       false,
       false
       );

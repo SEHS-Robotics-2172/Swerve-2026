@@ -41,11 +41,10 @@ public class RobotContainer {
 
     private final Trigger shooterToggle = new JoystickButton(driver, XboxController.Button.kX.value);
     private final Trigger hoardToggle = new JoystickButton(driver, XboxController.Button.kA.value);
+    private final Trigger testToggle = new JoystickButton(driver, XboxController.Button.kB.value);
 
     private final Trigger AutoIntakeTrigger = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
-    private final Trigger hoodUp = new Trigger(()->driver.getPOV()==180); 
-    private final Trigger hoodDown = new Trigger(()->driver.getPOV()==0); 
     private final Trigger intakeMode = new Trigger(()->driver.getRawButton(XboxController.Button.kStart.value));
     
     
@@ -61,6 +60,7 @@ public class RobotContainer {
     private final Command AutoIntake = new TrackFuel(i_Intake, s_Swerve);
     public final Command defaultShooter =  new DefaultShooter(shooter, this);
     public final Command hoardShooter = new HoardShooter(shooter, this);
+    public final Command testShooter = new ShooterTest(shooter, s_Swerve, this);
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
@@ -71,6 +71,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("Shoot", new Shoot(i_Intake, shooter));
         NamedCommands.registerCommand("Delay", new Delay(3));
+        NamedCommands.registerCommand("ResetGyro", new InstantCommand(() -> s_Swerve.zeroHeading()));
         
         
 
@@ -108,10 +109,7 @@ public class RobotContainer {
 
         shooterToggle.toggleOnTrue(defaultShooter);
         hoardToggle.toggleOnTrue(hoardShooter);
-
-        hoodUp.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(-0.002)))));
-
-        hoodDown.onTrue(new InstantCommand(() -> shooter.setWantedHoodAngle(shooter.getWantedHoodAngle().plus(Rotation2d.fromRotations(0.002)))));
+        testToggle.toggleOnTrue(testShooter);
     }
 
     /**

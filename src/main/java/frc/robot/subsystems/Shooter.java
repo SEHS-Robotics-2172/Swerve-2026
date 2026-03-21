@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
   private TalonFXConfiguration hoodConfiguration;
   private CANcoderConfiguration turretEncoderConfig;
   private CANcoderConfiguration hoodEncoderConfig;
-  public double flywheelSpeed = 1850; // 2000
+  public double flywheelSpeed = 1920; // 2000
   // @ 2k rpm:
   // 0 Rot = 2.05 m
   // 0.05 Rot = 3.67m;
@@ -48,7 +48,7 @@ public class Shooter extends SubsystemBase {
   private double wantedTurretSpeed = 0;
 
   public double wantedHoodAngle = 0;
-  public double wantedTurretAngle = 2.7;
+  public double wantedTurretAngle = 2.5;
 
   private double wantedFlyWheelVoltage;
 
@@ -88,7 +88,7 @@ public class Shooter extends SubsystemBase {
     hoodConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     hoodEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+    turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
 
     flyWheelConfiguration.Slot0.kP = 1.1;
     flyWheelConfiguration.Slot0.kV = 0.121;
@@ -115,7 +115,7 @@ public class Shooter extends SubsystemBase {
 
     
     turretPID.setSetpoint(wantedTurretAngle);
-    wantedTurretSpeed = -turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
+    wantedTurretSpeed = turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
     turret.setVoltage(MathUtil.clamp(wantedTurretSpeed, -3, 3));
     
     flywheelPID = flywheelPID.withVelocity(flywheelSpeed / 60);
@@ -140,6 +140,10 @@ public class Shooter extends SubsystemBase {
     return Rotation2d.fromRotations(wantedHoodAngle);
   }
 
+  public Rotation2d getCurrentTurretAngle(){
+    return Rotation2d.fromRotations(turretEncoder.getPosition().getValueAsDouble());
+  }
+
   public void setTurretSpeed(double speed){
     turret.set(speed);
   }
@@ -150,7 +154,7 @@ public class Shooter extends SubsystemBase {
   public void setFlyWheelSpeed(double speed){
     flywheelSpeed = speed;
   }
-  public void setStaticBrake(){
-
+  public void setWantedTurretAngle(double wantedTurretAngle){
+    this.wantedTurretAngle = wantedTurretAngle * 10;
   }
 }

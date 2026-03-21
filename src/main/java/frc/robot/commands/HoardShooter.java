@@ -29,13 +29,15 @@ public class HoardShooter extends Command {
   public void initialize(){
     if (container.defaultShooter != null)
       container.defaultShooter.cancel();
+      if (container.testShooter != null)
+      container.testShooter.cancel();
   }
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
     shooter.wantedTurretAngle = 2.7;
-    shooter.wantedHoodAngle = 0.1;
-    shooter.flywheelSpeed = 4000;
+    shooter.wantedHoodAngle = 0.2;
+    shooter.flywheelSpeed = 3000;
     
     shooter.flyWheel.setControl(shooter.flywheelPID);
   }

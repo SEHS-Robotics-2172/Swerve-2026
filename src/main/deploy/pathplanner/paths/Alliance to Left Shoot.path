@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.8192589763789397,
-        "y": 6.145351184669339
+        "x": 1.0307098506390748,
+        "y": 5.957493194246663
       },
       "isLocked": false,
       "linkedName": "Blue Alliance Balls"
@@ -20,8 +20,8 @@
         "y": 5.715
       },
       "prevControl": {
-        "x": 0.527453848358678,
-        "y": 5.836869343405147
+        "x": 1.4121875005496274,
+        "y": 5.962092186435002
       },
       "nextControl": null,
       "isLocked": false,
