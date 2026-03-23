@@ -23,7 +23,6 @@ public class ShooterTest extends Command {
   Rotation2d turretRotation;
   Rotation2d robotRotation;
   double wantedTurretAngle;
-  double ZTranslation;
   /** Creates a new ShooterTest. */
   public ShooterTest(Shooter shooter_ ,Swerve swerve_, RobotContainer container_) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -46,20 +45,18 @@ public class ShooterTest extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace(shooter.limelightName).getZ();
-    robotPose3d = LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub").plus(new Transform3d(0, 0, 0.595, Rotation3d.kZero));
-    robotRotation = Rotation2d.fromDegrees(swerve.gyro.getYaw().getValueAsDouble());
-    turretRotation = shooter.getCurrentTurretAngle().div(10).plus(robotRotation);
-    wantedTurretAngle = Math.atan(robotPose3d.getZ() / robotPose3d.getX());
+    // robotPose3d = LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub").plus(new Transform3d(0, 0, 0.595, Rotation3d.kZero));
+    // robotRotation = Rotation2d.fromDegrees(swerve.gyro.getYaw().getValueAsDouble());
+    // turretRotation = shooter.getCurrentTurretAngle().div(10).plus(robotRotation);
+    // wantedTurretAngle = (Math.atan(robotPose3d.getZ() / robotPose3d.getX()) + Math.PI) / (2 * Math.PI);
+
     shooter.setWantedTurretAngle(wantedTurretAngle);
-    if (ZTranslation <= 1.7){
-      shooter.wantedHoodAngle = -0.01;
-    }
-    else if (ZTranslation > 1.7 && ZTranslation <= 3.7){
-      shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
-    }
+
+    // Hood if we have one
+
     shooter.flywheelSpeed = 2000;
     shooter.flyWheel.setControl(shooter.flywheelPID);
+
   }
 
   // Called once the command ends or is interrupted.

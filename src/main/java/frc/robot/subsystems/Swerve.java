@@ -7,6 +7,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,12 +21,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    SwerveDrivePoseEstimator poseEstimator;
+
+    LimelightHelpers.PoseEstimate visionEstimate;
+    boolean rejectVisionUpdates;
 
     RobotConfig config;
     public Swerve() {
@@ -40,6 +47,8 @@ public class Swerve extends SubsystemBase {
         };
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
+
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), getPose());
 
 
         try{
@@ -170,7 +179,25 @@ public class Swerve extends SubsystemBase {
     }
     @Override
     public void periodic(){
+        rejectVisionUpdates = false;
+        visionEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-hub");
+        
+        if (visionEstimate == null)
+            rejectVisionUpdates = true;
+        else{
+            if(visionEstimate.tagCount == 0)
+                rejectVisionUpdates = true;
+            if(Math.abs(gyro.getAngularVelocityZDevice().getValueAsDouble()) > 360)
+                rejectVisionUpdates = true;
+        }
+
         swerveOdometry.update(getGyroYaw(), getModulePositions());
+        poseEstimator.update(getGyroYaw(), getModulePositions());
+
+        if(!rejectVisionUpdates){
+            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            poseEstimator.addVisionMeasurement(visionEstimate.pose, visionEstimate.timestampSeconds);
+        }
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
