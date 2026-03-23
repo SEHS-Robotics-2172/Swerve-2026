@@ -7,6 +7,8 @@ import com.pathplanner.lib.config.PIDConstants;
 import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -19,12 +21,17 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
+    public SwerveDrivePoseEstimator poseEstimator;
+
+    LimelightHelpers.PoseEstimate visionEstimate;
+    boolean rejectVisionUpdates;
 
     RobotConfig config;
     public Swerve() {
@@ -41,6 +48,8 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry = new SwerveDriveOdometry(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions());
 
+        poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), getPose());
+
 
         try{
             config = RobotConfig.fromGUISettings();
@@ -49,8 +58,8 @@ public class Swerve extends SubsystemBase {
         e.printStackTrace();
         }
         AutoBuilder.configure(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            poseEstimator::getEstimatedPosition, // Robot pose supplier
+            poseEstimator::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> drive(chassisSpeedsToTranslation2d(speeds), speeds.omegaRadiansPerSecond, false, true), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
@@ -75,6 +84,7 @@ public class Swerve extends SubsystemBase {
     }
     public void resetPose(Pose2d pose){
         swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
 
     public Translation2d chassisSpeedsToTranslation2d(ChassisSpeeds speeds){
@@ -170,7 +180,29 @@ public class Swerve extends SubsystemBase {
     }
     @Override
     public void periodic(){
+
+        LimelightHelpers.SetRobotOrientation("limelight-hub", getGyroYaw().getDegrees(), 0, 0, 0, 0,0);
+
+        rejectVisionUpdates = false;
+        visionEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-hub");
+
+        if (visionEstimate == null)
+            rejectVisionUpdates = true;
+        else{
+            if(visionEstimate.tagCount == 0)
+                rejectVisionUpdates = true;
+            if(Math.abs(gyro.getAngularVelocityZDevice().getValueAsDouble()) > 360)
+                rejectVisionUpdates = true;
+        }
+
         swerveOdometry.update(getGyroYaw(), getModulePositions());
+        poseEstimator.update(getGyroYaw(), getModulePositions());
+        
+
+        if(!rejectVisionUpdates){
+            poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+            poseEstimator.addVisionMeasurement(visionEstimate.pose, visionEstimate.timestampSeconds);
+        }
 
         for(SwerveModule mod : mSwerveMods){
             SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());

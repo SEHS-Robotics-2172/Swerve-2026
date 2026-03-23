@@ -4,13 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Shooter;
@@ -20,11 +18,12 @@ public class ShooterTest extends Command {
   Shooter shooter;
   Swerve swerve;
   RobotContainer container;
-  Pose3d robotPose3d;
+  Pose2d robotPose;
+  Pose2d hubPose;
+  Transform2d difference;
   Rotation2d turretRotation;
   Rotation2d robotRotation;
   double wantedTurretAngle;
-  double ZTranslation;
   /** Creates a new ShooterTest. */
   public ShooterTest(Shooter shooter_ ,Swerve swerve_, RobotContainer container_) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -42,35 +41,29 @@ public class ShooterTest extends Command {
     if (container.hoardShooter != null){
       container.hoardShooter.cancel();
     }
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+      hubPose = new Pose2d(4.595, 4.030, Rotation2d.kZero);
+    else
+      hubPose = new Pose2d(11.900, 4.030, Rotation2d.kZero);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace(shooter.limelightName).getZ();
-
-    robotPose3d = LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub").plus(new Transform3d(0, 0, -0.595, Rotation3d.kZero));
+    robotPose = swerve.poseEstimator.getEstimatedPosition();
+    difference = robotPose.minus(hubPose);
     robotRotation = swerve.getGyroYaw();
-    turretRotation = shooter.getCurrentTurretAngle().div(10).plus(robotRotation);
-    wantedTurretAngle = Math.atan2(-robotPose3d.getZ() , -robotPose3d.getX()) / (2 * Math.PI) - robotRotation.getRotations();
-    if (LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub") != Pose3d.kZero)
-      shooter.setWantedTurretAngle(Math.abs(wantedTurretAngle));
-    else{
-      shooter.setWantedTurretAngle(wantedTurretAngle);
-    }
 
+    wantedTurretAngle = (Math.atan2(difference.getY(), difference.getX()) / (2 * Math.PI)) + robotRotation.getRotations() + 0.5;
 
-    if (ZTranslation <= 1.7){
-      shooter.wantedHoodAngle = -0.01;
-    }
-    else if (ZTranslation > 1.7 && ZTranslation <= 3.7){
-      shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
-    }
-    shooter.flywheelSpeed = 0; // 2000;
+    shooter.setWantedTurretAngle(wantedTurretAngle);
+
+    // Hood if we have one
+
+    shooter.flywheelSpeed = 2000;
     shooter.flyWheel.setControl(shooter.flywheelPID);
 
-    SmartDashboard.putNumber("Gyro Rotation", swerve.getGyroYaw().getRotations());
-    SmartDashboard.putNumber("Test Turret Wanted Angle", wantedTurretAngle);
   }
 
   // Called once the command ends or is interrupted.
@@ -79,6 +72,7 @@ public class ShooterTest extends Command {
     shooter.flywheelSpeed = 0;
     shooter.flyWheel.set(0);
     shooter.wantedHoodAngle = 0;
+    shooter.setWantedTurretAngle(0);
 
   }
 }
