@@ -58,8 +58,8 @@ public class Swerve extends SubsystemBase {
         e.printStackTrace();
         }
         AutoBuilder.configure(
-            this::getPose, // Robot pose supplier
-            this::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
+            poseEstimator::getEstimatedPosition, // Robot pose supplier
+            poseEstimator::resetPose, // Method to reset odometry (will be called if your auto has a starting pose)
             this::getCurrentSpeeds, // ChassisSpeeds supplier. MUST BE ROBOT RELATIVE
             (speeds, feedforwards) -> drive(chassisSpeedsToTranslation2d(speeds), speeds.omegaRadiansPerSecond, false, true), // Method that will drive the robot given ROBOT RELATIVE ChassisSpeeds. Also optionally outputs individual module feedforwards
             new PPHolonomicDriveController( // PPHolonomicController is the built in path following controller for holonomic drive trains
@@ -181,7 +181,7 @@ public class Swerve extends SubsystemBase {
     public void periodic(){
         rejectVisionUpdates = false;
         visionEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-hub");
-        
+
         if (visionEstimate == null)
             rejectVisionUpdates = true;
         else{
