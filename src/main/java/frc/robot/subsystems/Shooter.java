@@ -39,7 +39,7 @@ public class Shooter extends SubsystemBase {
   private TalonFXConfiguration hoodConfiguration;
   private CANcoderConfiguration turretEncoderConfig;
   private CANcoderConfiguration hoodEncoderConfig;
-  public double flywheelSpeed = 1920; // 2000
+  public double flywheelSpeed = 0; // 2000
   // @ 2k rpm:
   // 0 Rot = 2.05 m
   // 0.05 Rot = 3.67m;
@@ -88,7 +88,7 @@ public class Shooter extends SubsystemBase {
     hoodConfiguration.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
     hoodEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-    turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+    turretEncoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
 
     flyWheelConfiguration.Slot0.kP = 1.1;
     flyWheelConfiguration.Slot0.kV = 0.121;
@@ -115,8 +115,8 @@ public class Shooter extends SubsystemBase {
 
     
     turretPID.setSetpoint(wantedTurretAngle);
-    wantedTurretSpeed = turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
-    turret.setVoltage(MathUtil.clamp(wantedTurretSpeed, -3, 3));
+    wantedTurretSpeed = -turretPID.calculate(turretEncoder.getPosition().getValueAsDouble());
+    turret.setVoltage(MathUtil.clamp(wantedTurretSpeed, -1.5, 1.5));
     
     flywheelPID = flywheelPID.withVelocity(flywheelSpeed / 60);
     

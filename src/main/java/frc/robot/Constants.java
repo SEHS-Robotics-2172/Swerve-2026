@@ -163,7 +163,7 @@ public final class Constants {
         public static final int hoodEncoder = 29;
 
         public static final Rotation2d hoodEncoderOffset = Rotation2d.fromRotations(-.41);
-        public static final Rotation2d turretEncoderOffset = Rotation2d.fromRotations(0.37);
+        public static final Rotation2d turretEncoderOffset = Rotation2d.fromRotations(-0.194824);
         
     }
 }

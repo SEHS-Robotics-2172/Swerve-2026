@@ -8,6 +8,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve;
@@ -53,16 +54,23 @@ public class ShooterTest extends Command {
   public void execute() {
     robotPose = swerve.poseEstimator.getEstimatedPosition();
     difference = robotPose.minus(hubPose);
-    robotRotation = swerve.getGyroYaw();
+    robotRotation = swerve.poseEstimator.getEstimatedPosition().getRotation();
 
-    wantedTurretAngle = (Math.atan2(difference.getY(), difference.getX()) / (2 * Math.PI)) + robotRotation.getRotations() + 0.5;
-
-    shooter.setWantedTurretAngle(wantedTurretAngle);
+    wantedTurretAngle = ((Math.atan2(difference.getX(), difference.getY())) / (2 * Math.PI));
+    SmartDashboard.putNumber("Turret Angle Pre-Gyro", wantedTurretAngle);
+    wantedTurretAngle += robotRotation.getRotations();
+    SmartDashboard.putNumber("Turret Angle Post-Gyro", wantedTurretAngle);
+    
+    shooter.setWantedTurretAngle(-wantedTurretAngle);
 
     // Hood if we have one
 
-    shooter.flywheelSpeed = 2000;
+    shooter.flywheelSpeed = 0;
     shooter.flyWheel.setControl(shooter.flywheelPID);
+
+    SmartDashboard.putNumber("Test Turret Wanted Angle", wantedTurretAngle);
+    SmartDashboard.putNumber("Arc Tangent", Math.atan2(difference.getX(), difference.getY()) / (2 * Math.PI));
+    SmartDashboard.putNumber("Test Gyro Angle Rotations", robotRotation.getRotations());
 
   }
 

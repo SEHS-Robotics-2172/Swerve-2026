@@ -18,6 +18,8 @@ import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,6 +28,7 @@ import frc.robot.SwerveModule;
 
 public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
+    private final Field2d field;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
     public SwerveDrivePoseEstimator poseEstimator;
@@ -35,6 +38,7 @@ public class Swerve extends SubsystemBase {
 
     RobotConfig config;
     public Swerve() {
+        field = new Field2d();
         gyro = new Pigeon2(Constants.Swerve.pigeonID);
         gyro.getConfigurator().apply(new Pigeon2Configuration());
         gyro.setYaw(0);
@@ -50,7 +54,7 @@ public class Swerve extends SubsystemBase {
 
         poseEstimator = new SwerveDrivePoseEstimator(Constants.Swerve.swerveKinematics, getGyroYaw(), getModulePositions(), getPose());
 
-
+        SmartDashboard.putData("Field", field);
         try{
             config = RobotConfig.fromGUISettings();
         } catch (Exception e) {
@@ -180,9 +184,7 @@ public class Swerve extends SubsystemBase {
     }
     @Override
     public void periodic(){
-
         LimelightHelpers.SetRobotOrientation("limelight-hub", getGyroYaw().getDegrees(), 0, 0, 0, 0,0);
-
         rejectVisionUpdates = false;
         visionEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-hub");
 
@@ -204,10 +206,15 @@ public class Swerve extends SubsystemBase {
             poseEstimator.addVisionMeasurement(visionEstimate.pose, visionEstimate.timestampSeconds);
         }
 
-        for(SwerveModule mod : mSwerveMods){
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
-            SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
-        }
+        // for(SwerveModule mod : mSwerveMods){
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " CANcoder", mod.getCANcoder().getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Angle", mod.getPosition().angle.getDegrees());
+        //     SmartDashboard.putNumber("Mod " + mod.moduleNumber + " Velocity", mod.getState().speedMetersPerSecond);    
+        // }
+        SmartDashboard.putNumber("Robot Position X: ", poseEstimator.getEstimatedPosition().getX());
+        SmartDashboard.putNumber("Robot Position Y: ", poseEstimator.getEstimatedPosition().getY());
+        SmartDashboard.putNumber("Robot Position Rotation: ", poseEstimator.getEstimatedPosition().getRotation().getRotations());
+        field.setRobotPose(poseEstimator.getEstimatedPosition());
+        SmartDashboard.putBoolean("Red ", DriverStation.getAlliance().get() == Alliance.Red);
     }
 }
