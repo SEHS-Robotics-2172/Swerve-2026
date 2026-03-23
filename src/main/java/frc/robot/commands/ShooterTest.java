@@ -4,12 +4,11 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Pose3d;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Rotation3d;
-import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.robot.subsystems.Swerve;
 import frc.robot.subsystems.Shooter;
@@ -19,7 +18,9 @@ public class ShooterTest extends Command {
   Shooter shooter;
   Swerve swerve;
   RobotContainer container;
-  Pose3d robotPose3d;
+  Pose2d robotPose;
+  Pose2d hubPose;
+  Transform2d difference;
   Rotation2d turretRotation;
   Rotation2d robotRotation;
   double wantedTurretAngle;
@@ -40,15 +41,21 @@ public class ShooterTest extends Command {
     if (container.hoardShooter != null){
       container.hoardShooter.cancel();
     }
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue)
+      hubPose = new Pose2d(4.595, 4.030, Rotation2d.kZero);
+    else
+      hubPose = new Pose2d(11.900, 4.030, Rotation2d.kZero);
+
   }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    // robotPose3d = LimelightHelpers.getBotPose3d_TargetSpace("limelight-hub").plus(new Transform3d(0, 0, 0.595, Rotation3d.kZero));
-    // robotRotation = Rotation2d.fromDegrees(swerve.gyro.getYaw().getValueAsDouble());
-    // turretRotation = shooter.getCurrentTurretAngle().div(10).plus(robotRotation);
-    // wantedTurretAngle = (Math.atan(robotPose3d.getZ() / robotPose3d.getX()) + Math.PI) / (2 * Math.PI);
+    robotPose = swerve.poseEstimator.getEstimatedPosition();
+    difference = robotPose.minus(hubPose);
+    robotRotation = swerve.getGyroYaw();
+
+    wantedTurretAngle = (Math.atan2(difference.getY(), difference.getX()) / (2 * Math.PI)) + robotRotation.getRotations() + 0.5;
 
     shooter.setWantedTurretAngle(wantedTurretAngle);
 
@@ -65,6 +72,7 @@ public class ShooterTest extends Command {
     shooter.flywheelSpeed = 0;
     shooter.flyWheel.set(0);
     shooter.wantedHoodAngle = 0;
+    shooter.setWantedTurretAngle(0);
 
   }
 }

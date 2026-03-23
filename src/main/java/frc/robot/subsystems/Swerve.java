@@ -28,7 +28,7 @@ public class Swerve extends SubsystemBase {
     public SwerveDriveOdometry swerveOdometry;
     public SwerveModule[] mSwerveMods;
     public Pigeon2 gyro;
-    SwerveDrivePoseEstimator poseEstimator;
+    public SwerveDrivePoseEstimator poseEstimator;
 
     LimelightHelpers.PoseEstimate visionEstimate;
     boolean rejectVisionUpdates;
@@ -84,6 +84,7 @@ public class Swerve extends SubsystemBase {
     }
     public void resetPose(Pose2d pose){
         swerveOdometry.resetPosition(getGyroYaw(), getModulePositions(), pose);
+        poseEstimator.resetPosition(getGyroYaw(), getModulePositions(), pose);
     }
 
     public Translation2d chassisSpeedsToTranslation2d(ChassisSpeeds speeds){
@@ -179,6 +180,9 @@ public class Swerve extends SubsystemBase {
     }
     @Override
     public void periodic(){
+
+        LimelightHelpers.SetRobotOrientation("limelight-hub", getGyroYaw().getDegrees(), 0, 0, 0, 0,0);
+
         rejectVisionUpdates = false;
         visionEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-hub");
 
@@ -193,6 +197,7 @@ public class Swerve extends SubsystemBase {
 
         swerveOdometry.update(getGyroYaw(), getModulePositions());
         poseEstimator.update(getGyroYaw(), getModulePositions());
+        
 
         if(!rejectVisionUpdates){
             poseEstimator.setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
