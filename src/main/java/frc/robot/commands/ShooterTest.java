@@ -21,7 +21,7 @@ public class ShooterTest extends Command {
   RobotContainer container;
   Pose2d robotPose;
   Pose2d hubPose;
-  Transform2d difference;
+  Pose2d difference;
   Rotation2d turretRotation;
   Rotation2d robotRotation;
   double wantedTurretAngle;
@@ -53,15 +53,25 @@ public class ShooterTest extends Command {
   @Override
   public void execute() {
     robotPose = swerve.poseEstimator.getEstimatedPosition();
-    difference = robotPose.minus(hubPose);
-    robotRotation = swerve.poseEstimator.getEstimatedPosition().getRotation();
+    robotRotation = robotPose.getRotation();
+    robotPose = new Pose2d(robotPose.getX(), robotPose.getY(), Rotation2d.kZero);
 
-    wantedTurretAngle = ((Math.atan2(difference.getX(), difference.getY())) / (2 * Math.PI));
+    difference = new Pose2d(hubPose.getX() - robotPose.getX(), hubPose.getY() - robotPose.getY(), Rotation2d.kZero);
+
+    // Blue Top
+    if (robotPose.getY() >= hubPose.getY())
+      wantedTurretAngle = ((Math.atan(difference.getX() / difference.getY())) / (2 * Math.PI));
+
+    // Blue Bottom 
+    if (robotPose.getY() < hubPose.getY())
+      wantedTurretAngle = ((Math.atan(difference.getY() / difference.getX())) / (2 * Math.PI)) + 0.25;
+
     SmartDashboard.putNumber("Turret Angle Pre-Gyro", wantedTurretAngle);
-    wantedTurretAngle += robotRotation.getRotations();
-    SmartDashboard.putNumber("Turret Angle Post-Gyro", wantedTurretAngle);
+    // wantedTurretAngle += robotRotation.getRotations();
+    // SmartDashboard.putNumber("Turret Angle Post-Gyro", wantedTurretAngle);
     
-    shooter.setWantedTurretAngle(-wantedTurretAngle);
+    
+    shooter.setWantedTurretAngle(wantedTurretAngle);
 
     // Hood if we have one
 
