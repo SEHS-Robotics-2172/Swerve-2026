@@ -6,7 +6,6 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Transform2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -59,15 +58,15 @@ public class ShooterTest extends Command {
     difference = new Pose2d(hubPose.getX() - robotPose.getX(), hubPose.getY() - robotPose.getY(), Rotation2d.kZero);
 
     // Blue Top
-    if (robotPose.getY() >= hubPose.getY())
-      wantedTurretAngle = ((Math.atan(difference.getX() / difference.getY())) / (2 * Math.PI));
+    // if (robotPose.getY() >= hubPose.getY())
+    //   wantedTurretAngle = ((Math.atan(difference.getX() / difference.getY())) / (2 * Math.PI));
 
     // Blue Bottom 
-    if (robotPose.getY() < hubPose.getY())
+    // if (robotPose.getY() < hubPose.getY())
       wantedTurretAngle = ((Math.atan(difference.getY() / difference.getX())) / (2 * Math.PI)) + 0.25;
 
     SmartDashboard.putNumber("Turret Angle Pre-Gyro", wantedTurretAngle);
-    // wantedTurretAngle += robotRotation.getRotations();
+    wantedTurretAngle -= swerve.getGyroYaw().getRotations();
     // SmartDashboard.putNumber("Turret Angle Post-Gyro", wantedTurretAngle);
     
     

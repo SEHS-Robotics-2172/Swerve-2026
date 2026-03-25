@@ -12,18 +12,13 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
-import com.fasterxml.jackson.databind.ser.impl.FilteredBeanPropertyWriter;
-import com.pathplanner.lib.events.CancelCommandEvent;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
-import frc.robot.LimelightHelpers;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.ShooterConstants;
 
 public class Shooter extends SubsystemBase {
@@ -111,6 +106,9 @@ public class Shooter extends SubsystemBase {
     wantedTurretAngle = MathUtil.clamp(wantedTurretAngle, 0, 4.65);
     hoodPID.setSetpoint(wantedHoodAngle);
     wantedHoodSpeed = hoodPID.calculate(hoodEncoder.getPosition().getValueAsDouble() + Constants.ShooterConstants.hoodEncoderOffset.getRotations());
+
+    wantedHoodSpeed = 0;
+
     hood.set(MathUtil.clamp(wantedHoodSpeed, -0.05, 0.05));
 
     

@@ -184,7 +184,10 @@ public class Swerve extends SubsystemBase {
     }
     @Override
     public void periodic(){
-        LimelightHelpers.SetRobotOrientation("limelight-hub", getGyroYaw().getDegrees(), 0, 0, 0, 0,0);
+        if (DriverStation.getAlliance().get() == Alliance.Blue)
+            LimelightHelpers.SetRobotOrientation("limelight-hub", getGyroYaw().getDegrees(), 0, 0, 0, 0,0);
+        else
+            LimelightHelpers.SetRobotOrientation("limelight-hub", getGyroYaw().getDegrees() + 180, 0, 0, 0, 0,0);
         rejectVisionUpdates = false;
         visionEstimate = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-hub");
 
