@@ -24,6 +24,8 @@ public class ShooterTest extends Command {
   Rotation2d turretRotation;
   Rotation2d robotRotation;
   double wantedTurretAngle;
+
+  double distance;
   /** Creates a new ShooterTest. */
   public ShooterTest(Shooter shooter_ ,Swerve swerve_, RobotContainer container_) {
     // Use addRequirements() here to declare subsystem dependencies.
@@ -57,6 +59,8 @@ public class ShooterTest extends Command {
 
     difference = new Pose2d(hubPose.getX() - robotPose.getX(), hubPose.getY() - robotPose.getY(), Rotation2d.kZero);
 
+    distance = Math.sqrt((difference.getX() * difference.getX()) + (difference.getY() * difference.getY()));
+
     // Blue Top
     // if (robotPose.getY() >= hubPose.getY())
     //   wantedTurretAngle = ((Math.atan(difference.getX() / difference.getY())) / (2 * Math.PI));
@@ -74,12 +78,14 @@ public class ShooterTest extends Command {
 
     // Hood if we have one
 
-    shooter.flywheelSpeed = 0;
+    shooter.flywheelSpeed = -(distance*279.7 + 2023);
     shooter.flyWheel.setControl(shooter.flywheelPID);
 
     SmartDashboard.putNumber("Test Turret Wanted Angle", wantedTurretAngle);
-    SmartDashboard.putNumber("Arc Tangent", Math.atan2(difference.getX(), difference.getY()) / (2 * Math.PI));
+    SmartDashboard.putNumber("Arc Tangent", Math.atan2(difference.getY(), difference.getX()) / (2 * Math.PI));
     SmartDashboard.putNumber("Test Gyro Angle Rotations", robotRotation.getRotations());
+    // shooter.setWantedHoodAngle(Rotation2d.fromRotations(-0.2));
+    SmartDashboard.putNumber("Distance from Hub", distance);
 
   }
 

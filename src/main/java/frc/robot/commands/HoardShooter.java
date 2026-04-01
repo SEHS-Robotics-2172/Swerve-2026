@@ -41,7 +41,7 @@ public class HoardShooter extends Command {
   @Override
   public void end(boolean interupted){
     shooter.flywheelSpeed = 0;
-    shooter.hood.set(0);
+    // shooter.hood.set(0);
     shooter.flyWheel.set(0);
     shooter.wantedHoodAngle = 0;
   }

@@ -26,7 +26,7 @@ public class Robot extends TimedRobot {
   double ZTranslation = 0;
   double XTranslation = 0;
 
-  Orchestra music = new Orchestra();
+  // Orchestra music = new Orchestra();
 
   /**
    * This function is run when the robot is first started up and should be used for any

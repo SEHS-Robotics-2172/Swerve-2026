@@ -23,6 +23,6 @@ public class IntakeOn extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.setSpeed(1, shooterMode);
+    intake.setSpeed(0, 1);
   }
 }

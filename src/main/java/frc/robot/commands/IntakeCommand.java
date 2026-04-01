@@ -24,9 +24,13 @@ public class IntakeCommand extends Command{
 
     public void execute() {
         /* Get Values?, Deadband?*/
-
+      if (IntakeMode.getAsBoolean())
+        i_Intake.setSpeed(IntakeButton.getAsDouble(), 1);
+      else
+        i_Intake.setSpeed(IntakeButton.getAsDouble(), 0);
         /* Used */
-        i_Intake.setSpeed(IntakeButton.getAsDouble(), IntakeMode.getAsBoolean());
+
+        // System.out.println("Intake Command Run");
 
     }
 

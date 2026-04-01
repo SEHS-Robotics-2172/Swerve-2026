@@ -150,8 +150,9 @@ public final class Constants {
         public static final int topIntake = 50;
         public static final int bottomIntake = 51;
         public static final int funnelIntake = 53; // NOT REV 🥳
-        public static final int randomAddedMotor = 54;
+        public static final int fastIntake = 54;
         public static final int topIntake2 = 55;
+        public static final int intakeEncoder = 35;
     }
 
     public static final class ShooterConstants {
@@ -163,7 +164,7 @@ public final class Constants {
         public static final int hoodEncoder = 29;
 
         public static final Rotation2d hoodEncoderOffset = Rotation2d.fromRotations(-.41);
-        public static final Rotation2d turretEncoderOffset = Rotation2d.fromRotations(-0.194824);
+        public static final Rotation2d turretEncoderOffset = Rotation2d.fromRotations(-0.242920);
         
     }
 }

@@ -50,7 +50,7 @@ public class ShooterOn extends Command {
       shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
     }
     shooter.flywheelSpeed = 2000;
-    shooter.hood.set(MathUtil.clamp(shooter.wantedHoodSpeed, -0.05, 0.05));
+    // shooter.hood.set(MathUtil.clamp(shooter.wantedHoodSpeed, -0.05, 0.05));
     shooter.flyWheel.setControl(shooter.flywheelPID);
   }
 
@@ -58,7 +58,7 @@ public class ShooterOn extends Command {
   @Override
   public void end(boolean interrupted) {
     shooter.flywheelSpeed = 0;
-    shooter.hood.set(0);
+    // shooter.hood.set(0);
     shooter.flyWheel.set(0);
   }
 

@@ -48,13 +48,14 @@ public class DefaultShooter extends Command {
     else if (ZTranslation > 1.7 && ZTranslation <= 3.7){
       shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
     }
-    shooter.flywheelSpeed = 2000;
+    shooter.flywheelSpeed = -4000;
     shooter.flyWheel.setControl(shooter.flywheelPID);
+    shooter.wantedTurretAngle = 0;
   }
   @Override
   public void end(boolean interupted){
     shooter.flywheelSpeed = 0;
-    shooter.hood.set(0);
+    // shooter.hood.set(0);
     shooter.flyWheel.set(0);
     shooter.wantedHoodAngle = 0;
   }

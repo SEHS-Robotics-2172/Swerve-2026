@@ -3,6 +3,7 @@ package frc.robot;
 import com.pathplanner.lib.auto.AutoBuilder;
 import com.pathplanner.lib.auto.NamedCommands;
 
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.GenericHID;
 import edu.wpi.first.wpilibj.XboxController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -42,6 +43,9 @@ public class RobotContainer {
     private final Trigger AutoIntakeTrigger = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
 
     private final Trigger intakeMode = new Trigger(()->driver.getRawButton(XboxController.Button.kStart.value));
+
+    private Trigger intakeUp = new Trigger(()->driver.getPOV()==0);
+    private Trigger intakeDown = new Trigger(()->driver.getPOV()==180);
     
     
     
@@ -50,7 +54,7 @@ public class RobotContainer {
     
     /* Subsystems */
     public final Swerve s_Swerve = new Swerve();
-    public final Intake i_Intake = new Intake(); //Merrick
+    public final Intake i_Intake = new Intake(); 
     public final Shooter shooter = new Shooter();
     
     private final Command AutoIntake = new TrackFuel(i_Intake, s_Swerve);
@@ -106,6 +110,12 @@ public class RobotContainer {
         shooterToggle.toggleOnTrue(defaultShooter);
         hoardToggle.toggleOnTrue(hoardShooter);
         testToggle.toggleOnTrue(testShooter);
+        intakeUp.onTrue(new InstantCommand(()->i_Intake.setPosition(Rotation2d.fromRotations(0.24))));
+        intakeDown.onTrue(new InstantCommand(()->i_Intake.setPosition(Rotation2d.fromRotations(0))));
+
+        new Trigger(()->driver.getPOV() == 90).onTrue(new InstantCommand(()->shooter.wantedHoodAngle += (0.01)));
+
+        new Trigger(()->driver.getPOV() == 270).onTrue(new InstantCommand(()->shooter.wantedHoodAngle -= (0.01)));
     }
 
     /**

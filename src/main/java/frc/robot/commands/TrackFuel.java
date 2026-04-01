@@ -30,7 +30,7 @@ public class TrackFuel extends Command {
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    intake.setSpeed(1, false);
+    intake.setSpeed(1, 1);
     swerve.drive(
       new Translation2d(/*(-LimelightHelpers.getTY("limelight-balls") * 0.05)*/ - 3, 0),
       -LimelightHelpers.getTX("limelight-balls") * 0.8,
@@ -42,7 +42,7 @@ public class TrackFuel extends Command {
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    intake.setSpeed(0, false);
+    intake.setSpeed(0, 1);
   }
 
 }
