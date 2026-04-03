@@ -4,6 +4,8 @@
 
 package frc.robot.commands;
 
+import com.ctre.phoenix6.mechanisms.swerve.LegacySwerveModule.DriveRequestType;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -24,6 +26,8 @@ public class ShooterTest extends Command {
   Rotation2d turretRotation;
   Rotation2d robotRotation;
   double wantedTurretAngle;
+
+  Pose2d targetPose;
 
   double distance;
   /** Creates a new ShooterTest. */
@@ -57,7 +61,28 @@ public class ShooterTest extends Command {
     robotRotation = robotPose.getRotation();
     robotPose = new Pose2d(robotPose.getX(), robotPose.getY(), Rotation2d.kZero);
 
-    difference = new Pose2d(hubPose.getX() - robotPose.getX(), hubPose.getY() - robotPose.getY(), Rotation2d.kZero);
+    if (DriverStation.getAlliance().get() == DriverStation.Alliance.Blue){
+      if (robotPose.getX() <= 5)
+        targetPose = hubPose;
+      else{
+        if (robotPose.getY() <= 4)
+          targetPose = new Pose2d(4,2, Rotation2d.kZero);
+        else 
+          targetPose = new Pose2d(4, 6, Rotation2d.kZero);
+      }
+    }
+    else {
+      if (robotPose.getX() >= 12)
+        targetPose = hubPose;
+      else{
+        if (robotPose.getY() <= 4)
+          targetPose = new Pose2d(13,2, Rotation2d.kZero);
+        else 
+          targetPose = new Pose2d(13, 6, Rotation2d.kZero);
+      }
+    }
+
+    difference = new Pose2d(targetPose.getX() - robotPose.getX(), targetPose.getY() - robotPose.getY(), Rotation2d.kZero);
 
     distance = Math.sqrt((difference.getX() * difference.getX()) + (difference.getY() * difference.getY()));
 
@@ -75,8 +100,6 @@ public class ShooterTest extends Command {
     
     
     shooter.setWantedTurretAngle(wantedTurretAngle);
-
-    // Hood if we have one
 
     if (distance <= 3.8)
       shooter.flywheelSpeed = -(distance*300 + 2000);

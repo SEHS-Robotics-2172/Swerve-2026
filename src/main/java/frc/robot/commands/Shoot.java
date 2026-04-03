@@ -12,12 +12,19 @@ import frc.robot.subsystems.Intake;
 // NOTE:  Consider using this command inline, rather than writing a subclass.  For more
 // information, see:
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
-public class Shoot extends ParallelCommandGroup {
+public class Shoot extends SequentialCommandGroup {
   /** Creates a new Shoot. */
   public Shoot(Intake intake_, RobotContainer container) {
     // Add your commands in the addCommands() call, e.g.
     // addCommands(new FooCommand(), new BarCommand());
-    addCommands(new ShooterOn(container, 5), new SequentialCommandGroup(new Delay(1), new IntakeOn(intake_)));
+    addCommands(
+      new ParallelCommandGroup(
+        new ShooterOn(container, 10),
+        new SequentialCommandGroup(new Delay(1),
+        new IntakeOn(intake_))
+        ),
+      new IntakeOff(intake_)
+      );
   }
   
 }
