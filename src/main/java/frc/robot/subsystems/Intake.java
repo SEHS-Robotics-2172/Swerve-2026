@@ -23,7 +23,6 @@ public class Intake extends SubsystemBase {
   /** Creates a new Intake. */
   private PIDController pid;
   private double intakeVoltage;
-  private double intakeRollerSpeed;
 
   private TalonFX topIntake;
   private TalonFX topIntake2;
@@ -74,9 +73,8 @@ public class Intake extends SubsystemBase {
     topIntake2.getConfigurator().apply(topIntake2Configuration);
   }
 
-  public void setSpeed(double intakeSpeed, double intakeRollerSpeed) {//changing name of revspeed later - Merrick
+  public void setFunnelSpeed(double intakeSpeed) {//changing name of revspeed later - Merrick
     this.intakeSpeed = intakeSpeed; 
-    this.intakeRollerSpeed = intakeRollerSpeed;
   }
   public void setPosition(Rotation2d position){
     pid.setSetpoint(MathUtil.clamp(position.getRotations(), 0, 0.3));
@@ -93,6 +91,7 @@ public class Intake extends SubsystemBase {
 
     if (intakeEncoder.getAbsolutePosition().getValueAsDouble() <= -0.12)
       fastIntake.set(-1);
+      // fastIntake.set(0);
     else
       fastIntake.set(0);
     if (bottomIntake.get() != 0)

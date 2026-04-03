@@ -10,28 +10,18 @@ public class IntakeCommand extends Command{
     private Intake i_Intake;
 
     private DoubleSupplier IntakeButton;
-    BooleanSupplier IntakeMode;
     
-    public IntakeCommand(Intake i_Intake, DoubleSupplier IntakeButton, BooleanSupplier IntakeMode) {
+    public IntakeCommand(Intake i_Intake, DoubleSupplier IntakeButton) {
         this.i_Intake = i_Intake;
         addRequirements(i_Intake); //Causes the robot to ****ing explode (not actually)(actually)
 
         this.IntakeButton = IntakeButton;
-        this.IntakeMode = IntakeMode;
     }
 
     @Override
 
     public void execute() {
-        /* Get Values?, Deadband?*/
-      if (IntakeMode.getAsBoolean())
-        i_Intake.setSpeed(IntakeButton.getAsDouble(), 1);
-      else
-        i_Intake.setSpeed(IntakeButton.getAsDouble(), 0);
-        /* Used */
-
-        // System.out.println("Intake Command Run");
-
+      i_Intake.setFunnelSpeed(IntakeButton.getAsDouble());
     }
 
   @Override

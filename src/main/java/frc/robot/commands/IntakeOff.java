@@ -21,6 +21,6 @@ public class IntakeOff extends InstantCommand {
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.setSpeed(0, 0);
+    intake.setFunnelSpeed(0);
   }
 }

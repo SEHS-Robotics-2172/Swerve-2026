@@ -6,22 +6,24 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
+import frc.robot.RobotContainer;
 import frc.robot.subsystems.Shooter;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
 public class ShooterOn extends Command {
   /** Creates a new Shoot. */
   double timer;
-  Shooter shooter;
+  RobotContainer container;
   
   double ZTranslation = 0;
   double XTranslation = 0;
 
-  public ShooterOn(Shooter shooter_, double timer_) {
+  public ShooterOn(RobotContainer container_, double timer_) {
     // Use addRequirements() here to declare subsystem dependencies.
-    shooter = shooter_;
+    container = container_;
     timer = timer_;
   }
 
@@ -35,31 +37,12 @@ public class ShooterOn extends Command {
   @Override
   public void execute() {
     timer -= Robot.kDefaultPeriod;
-    ZTranslation = LimelightHelpers.getTargetPose3d_CameraSpace(shooter.limelightName).getZ();
-    XTranslation = LimelightHelpers.getCameraPose3d_TargetSpace(shooter.limelightName).getX();
-    
-
-    /*System.out.println(LimelightHelpers.getTargetCount("limelight-old"));
-    LimelightHelpers.SetRobotOrientation("limelight-new", swerve.gyro.getYaw().getValueAsDouble(), 0, 0, 0, 0, 0);
-    */
-    shooter.wantedTurretAngle -= (LimelightHelpers.getTX(shooter.limelightName) + (XTranslation * 4)) * 0.1 * Robot.kDefaultPeriod;
-    if (ZTranslation <= 1.7){
-      shooter.wantedHoodAngle = -0.01;
-    }
-    else if (ZTranslation > 2 && ZTranslation <= 3.7){
-      shooter.wantedHoodAngle = 0.05 * (ZTranslation - 2) / (3.7 - 2);
-    }
-    shooter.flywheelSpeed = 2000;
-    // shooter.hood.set(MathUtil.clamp(shooter.wantedHoodSpeed, -0.05, 0.05));
-    shooter.flyWheel.setControl(shooter.flywheelPID);
+    CommandScheduler.getInstance().schedule(container.testShooter);
   }
 
   // Called once the command ends or is interrupted.
   @Override
   public void end(boolean interrupted) {
-    shooter.flywheelSpeed = 0;
-    // shooter.hood.set(0);
-    shooter.flyWheel.set(0);
   }
 
   // Returns true when the command should end.

@@ -41,9 +41,7 @@ public class RobotContainer {
     private final Trigger testToggle = new JoystickButton(driver, XboxController.Button.kB.value);
 
     private final Trigger AutoIntakeTrigger = new JoystickButton(driver, XboxController.Button.kRightBumper.value);
-
-    private final Trigger intakeMode = new Trigger(()->driver.getRawButton(XboxController.Button.kStart.value));
-
+    
     private Trigger intakeUp = new Trigger(()->driver.getPOV()==0);
     private Trigger intakeDown = new Trigger(()->driver.getPOV()==180);
     
@@ -64,12 +62,12 @@ public class RobotContainer {
 
     /** The container for the robot. Contains subsystems, OI devices, and commands. */
     public RobotContainer() {
-        NamedCommands.registerCommand("IntakeOn", new IntakeOn(i_Intake, false));
-        NamedCommands.registerCommand("IntakeShootOn", new IntakeOn(i_Intake, true));
+        NamedCommands.registerCommand("IntakeOn", new IntakeOn(i_Intake));
+        NamedCommands.registerCommand("IntakeShootOn", new IntakeOn(i_Intake));
         NamedCommands.registerCommand("IntakeShootOff", new IntakeOff(i_Intake));
         NamedCommands.registerCommand("IntakeOff", new IntakeOff(i_Intake));
 
-        NamedCommands.registerCommand("Shoot", new Shoot(i_Intake, shooter));
+        NamedCommands.registerCommand("Shoot", new Shoot(i_Intake, this));
         NamedCommands.registerCommand("Delay", new Delay(3));
         NamedCommands.registerCommand("ResetGyro", new InstantCommand(() -> s_Swerve.zeroHeading()));
         
@@ -88,7 +86,7 @@ public class RobotContainer {
                   () -> robotCentric.getAsBoolean()
               )
           );
-        i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, () -> driver.getRightTriggerAxis()-driver.getLeftTriggerAxis(), intakeMode)); // -driver.getLeftTriggerAxis()
+        i_Intake.setDefaultCommand(new IntakeCommand(i_Intake, () -> driver.getRightTriggerAxis()-driver.getLeftTriggerAxis())); // -driver.getLeftTriggerAxis()
         // shooter.setDefaultCommand(new DefaultShooter(shooter, () -> driver.getPOV() == 0, () -> driver.getPOV() == 180, driver::getLeftTriggerAxis));
 
         //Configure the button bindings

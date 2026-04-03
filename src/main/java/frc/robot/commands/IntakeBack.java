@@ -4,44 +4,44 @@
 
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.LimelightHelpers;
+import frc.robot.Robot;
 import frc.robot.subsystems.Intake;
-import frc.robot.subsystems.Swerve;
 
 /* You should consider using the more terse Command factories API instead https://docs.wpilib.org/en/stable/docs/software/commandbased/organizing-command-based.html#defining-commands */
-public class TrackFuel extends Command {
-  /** Creates a new TrackFuel. */
+public class IntakeBack extends Command {
+  /** Creates a new IntakeBack. */
   Intake intake;
-  Swerve swerve;
-  public TrackFuel(Intake intake_, Swerve swerve_) {
+  double timer;
+  public IntakeBack(Intake intake_) {
     // Use addRequirements() here to declare subsystem dependencies.
-    swerve = swerve_;
     intake = intake_;
     addRequirements(intake);
-    addRequirements(swerve);
   }
 
   // Called when the command is initially scheduled.
   @Override
-  public void initialize() {}
+  public void initialize() {
+    timer = 0.5;
+  }
 
   // Called every time the scheduler runs while the command is scheduled.
   @Override
   public void execute() {
-    swerve.drive(
-      new Translation2d(/*(-LimelightHelpers.getTY("limelight-balls") * 0.05)*/ - 3, 0),
-      -LimelightHelpers.getTX("limelight-balls") * 0.8,
-      false,
-      false
-      );
+    timer -= Robot.kDefaultPeriod;
+    intake.setFunnelSpeed(-1);
   }
 
   // Called once the command ends or is interrupted.
   @Override
-  public void end(boolean interrupted) {
-    intake.setFunnelSpeed(0);
-  }
+  public void end(boolean interrupted) {}
 
+  // Returns true when the command should end.
+  @Override
+  public boolean isFinished() {
+    if (timer >= 0)
+      return true;
+    else 
+      return false;
+  }
 }

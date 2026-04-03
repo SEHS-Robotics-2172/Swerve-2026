@@ -12,17 +12,15 @@ import frc.robot.subsystems.Intake;
 // https://docs.wpilib.org/en/stable/docs/software/commandbased/convenience-features.html
 public class IntakeOn extends InstantCommand {
   Intake intake;
-  boolean shooterMode;
-  public IntakeOn(Intake intake_, boolean shooterMode_) {
+  public IntakeOn(Intake intake_) {
     // Use addRequirements() here to declare subsystem dependencies.
     intake = intake_;
-    shooterMode = shooterMode_;
     addRequirements(intake);
   }
 
   // Called when the command is initially scheduled.
   @Override
   public void initialize() {
-    intake.setSpeed(0, 1);
+    intake.setFunnelSpeed(1);
   }
 }

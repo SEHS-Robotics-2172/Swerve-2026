@@ -78,7 +78,11 @@ public class ShooterTest extends Command {
 
     // Hood if we have one
 
-    shooter.flywheelSpeed = -(distance*279.7 + 2023);
+    if (distance <= 3.8)
+      shooter.flywheelSpeed = -(distance*300 + 2000);
+    else
+      shooter.flywheelSpeed = -(distance*350 + 1810);
+
     shooter.flyWheel.setControl(shooter.flywheelPID);
 
     SmartDashboard.putNumber("Test Turret Wanted Angle", wantedTurretAngle);
